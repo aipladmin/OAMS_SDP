@@ -770,10 +770,13 @@ def manage_profession():
 
 @app.route('/manage_profession/manage_professionscr/',methods=['POST'])
 def manage_professionscr():
-	if request.form['update'] is "update":
+	if request.form['bttn'] == "insert":
+		return "insert"
+	if requet.form['bttn'] == "update":
 		return "update"
-	return 'OUT'	
-
+	if requet.form['bttn'] == "delete":
+		return "delete"	
+@app.route('/reports/')
 def reports():
 	cursor = connection.cursor()
 	sql = "Select * from user_master where UTMID = %s or UTMID = %s"
@@ -791,9 +794,9 @@ def reports():
 	# print(data)
 	return render_template("reports.html",data=data)
 
-@app.route('/dreports/')
-def dreports():
-	return render_pdf(url_for('reports'))
+# @app.route('/dreports/')
+# def dreports():
+# 	return render_pdf(url_for('reports'))
 
 
 if __name__ == '__main__':
