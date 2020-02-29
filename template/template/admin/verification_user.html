@@ -1,0 +1,128 @@
+{% extends "index.html" %}
+{% block content %}
+<style type="text/css">
+	/* * {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial;
+  margin: 0 auto; /* Center website */
+  /*max-width: 800px;  Max width 
+  padding: 20px;
+  }*/
+  .heading {
+  	font-size: 25px;
+  	margin-right: 25px;
+  }
+
+  .fa {
+  	font-size: 25px;
+  }
+
+  .checked {
+  	color: orange;
+  	/*data loss*/
+  }
+
+  /* Three column layout */
+  .side {
+  	float: left;
+  	width: 15%;
+  	margin-top: 10px;
+  }
+
+  .middle {
+  	float: left;
+  	width: 70%;
+  	margin-top: 10px;
+  }
+
+  /* Place text to the right */
+  .right {
+  	text-align: right;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+  	content: "";
+  	display: table;
+  	clear: both;
+  }
+
+  /* The bar container */
+  .bar-container {
+  	width: 100%;
+  	background-color: #f1f1f1;
+  	text-align: center;
+  	color: white;
+  }
+
+  /* Individual bars */
+  .bar-5 {width: 100%; height: 18px; background-color: #4CAF50;}
+  .bar-4 {width: 0%; height: 18px; background-color: #2196F3;}
+  .bar-3 {width: 0%; height: 18px; background-color: #00bcd4;}
+  .bar-2 {width: 0%; height: 18px; background-color: #ff9800;}
+  .bar-1 {width: 0%; height: 18px; background-color: #f44336;}
+
+  /* Responsive layout - make the columns stack on top of each other instead of next to each other */
+  @media (max-width: 400px) {
+  	.side, .middle {
+  		width: 100%;
+  	}
+  	/* Hide the right column on small screens */
+  	.right {
+  		display: none;
+  	}
+  }
+
+
+</style>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2">Verification User</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+<div class="table-responsive">
+	<table class="table table-striped table-sm">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email ID</th>
+				<th>Phone</th>
+				<!-- <th>Activation</th>  -->
+				<th>Change Status</th>
+				<th>View Complaints</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}
+			<tr>
+				<td>{{ item[0]	}}</td>
+				<td>{{ item[1]	}}</td>
+				<td>{{ item[2]	}}</td>
+				<!-- <td>{{ item[3]|capitalize	}}</td>  -->
+				{% if item[3] == "activated" %}
+				<td><a class="btn btn-outline-success btn-sm" href='/verifyscr/{{ item[1],item[3] }}'>{{ item[3]|capitalize }}</a></td>	
+				{% endif %}
+				{% if item[3] == "pending" %}
+				<td><a class="btn btn-outline-danger btn-sm" href='/verifyscr/{{ item[1],item[3]|upper }}'>{{ item[3]|capitalize }}</a></td>	
+				{% endif %}
+				<td><button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="{{ '#'~item[2] }}">Complaints</button></td>
+			</tr>
+			{% endfor %}		
+		</tbody>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email ID</th>
+				<th>Phone</th>
+				<!-- <th>Activation</th>  -->
+				<th>Change Status</th>
+				<th>View Complaints</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+{% endblock %}

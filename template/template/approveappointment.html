@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% block content %}
+<!-- {% for items in data %}
+{{ items['UID'] }}
+{% endfor %} -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+  <h1 class="h2"><center>Approve Appointment </center></h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+  </div>
+
+</div>
+
+<form method="post" action="{{ url_for('approveappointmentscr') }}" class="form-inli">
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Email ID</th>
+				<th scope="col">Date</th>
+				<th scope="col">Time</th>
+				<th scope="col">Approve</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}
+			<tr>
+				<td>{{ item['name'] }}</td>
+				<td>{{ item['Email_ID'] }}</td>
+				<td>{{ item['Date'] }}</td>
+				<td>{{ item['Time'] }}</td>
+				<td><input type="checkbox" name="uid" value="{{ item['UID'] }}"></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+		<button type="submit" class="btn btn-success" name="bttn" value="accept" style="float:right;"> Accept </button>
+
+		<button type="submit" class="btn btn-danger" name="bttn" value="reject" style="float:right;">Reject</button>
+	
+
+</form>
+{% endblock %}

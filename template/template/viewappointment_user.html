@@ -1,0 +1,96 @@
+{% extends "index.html" %}
+{% block content %}
+
+<!-- {{ data }} -->
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2"><center>View Appointments</center></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+{% for item in data %}
+
+
+<div class="container py-3">
+	<!-- Card Start -->
+	<div class="card" >
+		<div class="row" >
+			<div class="col-md-8" >
+				<form action="{{ url_for('viewappointmentscr') }}" method = "post">
+					<div class="card-block " style="padding-left:12px;">
+						<h4 class="card-title">{{ item['Name'] }}</h4>
+						<p class="card-text">
+							Email ID: {{ item['Email_ID']}}
+						</p>
+						<p class="card-text">
+							Date: {{ item['Date'] }}
+						</p>
+						<p class="card-text">
+							Time: {{ item['Time'] }}
+						</p>	
+
+						<br>
+
+					</div>
+
+
+					<div class ="col-md-12 px-3 pb-3">
+						<button type="submit" class="btn btn-info" name="bttn" value="{{ item['AID'] }}">Cancel</button>
+
+						<button type="button" class="btn btn-danger" data-toggle="modal"  data-target="{{'#'~item['Email_ID']}}">Register Feedback</button>
+					</div>	
+					<div class ="col-md-12 px-3 pb-3">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="customFile">
+							<label class="custom-file-label" for="customFile">Upload Documents</label>
+							<small id="emailHelp" class="form-text text-muted ">Upload max 2 documents. Size: 50 KB each</small>
+						</div>
+					</div>
+				</form>
+			</div>
+<!-- FEEDBACK			 -->
+			<div id="{{ item['Email_ID'] }}" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+							<h4 class="modal-title">Register Feedback</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<label for="usr">Email ID</label>
+								<input type="text" class="form-control" id="usr" value="{{ item['Email_ID'] }}" readonly>
+							</div>
+							<div class="form-group">
+								<label for="sel1">Ratings:</label>
+								<select class="form-control" id="sel1">
+									<option value="5">5</option>
+									<option value="4">4</option>
+									<option value="3">3</option>
+									<option value="2">2</option>
+									<option value="1">1</option>
+									<option value="0">0</option>
+								</select>
+							</div>
+						</div>
+						<div class="modal-footer" >
+							<button type="button" class="btn btn-default" data-dismiss="modal" style="float: left;">CLOSE</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>	
+
+		<!-- Carousel start -->
+		<!-- End of carousel -->
+	</div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
