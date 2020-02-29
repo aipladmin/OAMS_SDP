@@ -1,0 +1,214 @@
+<html>
+<head>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='consultant_registration_css.css') }}">
+    {% include 'auth/header.html' %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+                $("#qual_doctors").hide();
+                $("#spec_doctors").hide();
+                $("#qual_lawyers").hide();
+                $("#spec_lawyers").hide();
+            });
+    </script>
+</head>
+<body>
+ <br/>
+ <div class="container register-form">
+    <div class="form">
+        <div class="note"> 
+            <h1  style="border-style: solid;border-color: black;padding: 13px;">Consultant Registration</h1>
+        </div>
+        <form method="post" action=" {{ url_for('cregisscr') }} ">
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <select id="profession" name="profession" class="form-control" tabindex="1" onchange="myFunction()">
+                                <option>SELECT</option>
+                                <option>Doctors</option>
+                              <option>Lawyers</option>
+                          </select>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Mobile No." name = "mno" tabindex="3" pattern="\d{10}" title="Error: Invalid Mobile No." />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Full Name" name = "name" tabindex="2" required="required" 
+                        pattern="[A-Z a-z]{1,50}" 
+                        title="Error:Invalid Name" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Email ID" name = "emailid" tabindex="4" 
+                        pattern="\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+"
+                        title="Error: Invalid Email ID">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <select class="custom-select" name="gender" tabindex="5"> 
+                            <option selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="date" class="form-control" placeholder ="Date of Birth" name = "dob" tabindex="5"
+                        required="required" 
+                        title="Error: Invalid Date of Birth" 
+                        >
+                    </div>
+                </div>   
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Address Line 1" name = "addline1" tabindex="5"
+                        required="required" 
+                        title="Error: Invalid Address" 
+                        >
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Address Line 3" name = "addline3" tabindex="7" 
+                        required="required" 
+                        title="Error: Invalid Address" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Address Line 2" name = "addline2" tabindex="6"
+                        required="required" 
+                        />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Landmark" name = "landmark" tabindex="8" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Area" name = "area" tabindex="9" required="required" 
+                        pattern="[A-Z a-z]{1,50}" 
+                        title="Error: Invalid Area" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="State" name = "state" tabindex="11" required="required" 
+                        pattern="[A-Z a-z]{1,50}" 
+                        title="Error: Invalid State" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="City" name = "city" tabindex="10" pattern="[A-Za-z]{1,50}" title="Error" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="Pincode" name = "pincode" tabindex="12" pattern="[0-9]{6}" required="required" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="GSTIN Number" name = "GSTIN" tabindex="6"
+                        required="required" 
+                        />
+                    </div>
+                </div>
+                <div class="col-md-6">    
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder ="PAN Card" name = "Pancard" tabindex="8" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+<!-- ============================== DOCTORS QUALIFICATION ========================= -->                <div class="form-group" id="qual_doctors">
+                        <label for="qualification">Qualification</label>
+                        <select multiple class="form-control" id="qualification" name="qualification" tabindex="13">
+                            <option>Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh)
+                            </option>
+                            <option>Doctor of Medicine (MD, Dr.MuD, Dr.Med)</option>
+                            <option>Doctor of Osteopathic Medicine (DO)</option>>
+                            <option>Doctor of Medicine by research (MD(Res), DM)</option>
+                            <option>Doctor of Philosophy (PhD, DPhil)</option>
+                            <option>Master of Clinical Medicine (MCM)</option>
+                            <option>Master of Medical Science (MMSc, MMedSc)</option>
+                            <option>Master of Medicine (MM, MMed)</option>
+                        </select>   
+                        <small id="emailHelp" class="form-text text-muted ">Select only 3.</small>
+                    </div>
+<!-- ================================================================================ -->
+<!-- ============================== LAWYERS QUALIFICATION ========================= -->                <div class="form-group" id="qual_lawyers">
+                        <label for="qualification">Qualification</label>
+                        <select multiple class="form-control" id="qualification" name="qualification" tabindex="13">
+                            <option>LLB</option>
+                            <option>Master of Legal Studies (MLS)</option>
+                            <option>Master of Dispute Resolution (MDR)</option>
+                            <option>Juris Doctor (JD)</option>
+                        </select>   
+                        <small id="emailHelp" class="form-text text-muted ">Select only 3.</small>
+                    </div>
+<!-- ================================================================================ -->
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder ="Password" name = "password" tabindex="15" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+<!-- ========================== DOCTORS SPECIALIZATION ============================= -->                  
+                    <div class="form-group" id="spec_doctors">
+                        <label for="sel2">Specialization </label>
+                        <select multiple class="form-control" id="specialization" name="specialization" tabindex="14" />
+                        <option>Cardiologist</option>
+                        <option>Hemtalogy</option>
+                        <option>Hepatology</option>
+                        <option>Infectious disease</option>
+                        <option>Oncology</option>
+                    </select>   
+                    <small id="spec_doctors" class="form-text text-muted ">Select only 3.</small>
+                </div>
+<!-- ========================== LAWYERS SPECIALIZATION ============================= -->                 <div class="form-group" id="spec_lawyers">
+                        <label for="sel2">Specialization </label>
+                        <select multiple class="form-control" id="specialization" name="specialization" tabindex="14" />
+                        <option>Criminal</option>
+                        <option>Patent</option>
+                        <option>Information technology</option>
+                        <option>Family</option>
+                        
+                    </select>   
+                    <small id="emailHelp" class="form-text text-muted ">Select only 3.</small>
+                </div>
+<!-- =============================================================================== -->                
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder ="Confirm Password" name = "cpassword" tabindex="16" />
+                </div>
+            </div>
+        </div>
+        <button type="submit"    class="btnSubmit">Submit</button>
+    </div>
+</div>
+</div>
+</form>
+<script type="text/javascript">
+        function myFunction() {
+            var x = document.getElementById("profession").selectedIndex;
+            var y = document.getElementById("profession").options;
+            if(y[x].index == 1)
+                {
+                    $("#qual_doctors").show();
+                    $("#spec_doctors").show();
+                    $("#qual_lawyers").hide();
+                    $("#spec_lawyers").hide();
+                }
+            if(y[x].index == 2)
+                {
+                    $("#qual_doctors").hide();
+                    $("#spec_doctors").hide();
+                    $("#qual_lawyers").show();
+                    $("#spec_lawyers").show();
+                }    
+        }
+    </script>
+{% include 'auth/footer.html' %}
+</body>
+
+</html> 

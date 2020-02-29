@@ -1,0 +1,55 @@
+<!-- Reports.html -->
+{% extends "index.html" %}
+{% block content %}
+
+<!-- {% for item in data %}
+{{ item['Name'] }}
+{% endfor %}
+{{ data }} -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2"><center>Summary Reports  </center></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+
+<div class="container">
+	<h3 style="text-align: center;">Summarised reports</h3>
+	<p>
+		
+	</p>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th>Full Name</th>
+				<th>Email</th>
+				<th>Mobile No.</th>
+				<th>Gender</th>
+				<th>DOB</th>
+				<th>Activation</th>
+				<!-- <th>Profession</th> -->
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}				
+			<tr>
+				<td>{{ item['Name'] }}</td>
+				<td>{{ item['Email_ID'] }}</td>
+				<td>{{ item['Phone_No'] }}</td>
+				<td>{{ item['Gender'] }}</td>
+				<td>{{ item['DOB'] }}</td>
+				<td>{{ item['Activation'] }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+</div>
+<div class="container">
+	<p>
+		<a href="{{ url_for('dreports') }}" class="btn btn-info" role="button">Generate Report</a>
+		
+	</p>
+</div>
+
+{% endblock %}

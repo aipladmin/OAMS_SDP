@@ -1,0 +1,84 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2"><center>View Appointment</center></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+
+{% for item in data %}
+
+<div class="container py-3" >
+	<!-- Card Start -->
+	<div class="card">
+		<div class="row"  style="padding-top: 20px; ">
+			<div class="col-md-7">
+				<form action="{{ url_for('viewappointmentscr') }}" method = "post">
+					<div class="card-block " style="padding-left:12px;">
+						<h4 class="card-title">{{ item['name'] }}</h4>
+						<p class="card-text">
+							Email ID: {{ item['Email_ID']}}
+						</p>
+						<p class="card-text">
+							Date: {{ item['Date'] }}
+						</p>
+						<p class="card-text">
+							Time: {{ item['Time'] }}
+						</p>	
+
+						<br>
+
+					</div>
+
+				</div>
+			</form>
+			<div class ="col-md-5 px-0">
+				<button type="submit" class="btn btn-info" name="bttn" value="{{ item['AID'] }}">Cancel</button>
+				<!-- </div>	 -->
+				
+				<!-- <button type="submit" class="btn btn-primary">Request Documents</button> -->
+				<!-- =================================================================== -->
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Download Documents
+					</button>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="#">Blood Report</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#">CT Scans</a>
+					</div>
+				</div>
+				
+				 <!-- =================================================================== -->
+				<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="{{ '#'~item['Phone_No'] }}">Reschedule</button>
+			</div>	
+			<div id="{{ item['Phone_No'] }}" class="collapse">
+				<div class = "container">
+					<form method="post" action="{{ url_for('reschedule') }}">
+						<div class="row">
+							<div class="col-md-4">
+								<input type="text" class="form-control" value="{{ item['Email_ID']}}" readonly="readonly" name="email">
+							</div>
+							<div class="col-md-4">
+								<input type="date" class="form-control" id="Start_Date" placeholder="Start Date" name = "start_date"  />
+							</div>
+							<div class="col-md-2">
+								<input type="time" class="form-control" id="end_time" name = "end_time" />
+							</div>
+							<div class="col-md-2">
+								<button type="submit" class="btn btn-success" name="bttn" value="{{ item['AID'] }}">Approve</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>	
+			<!-- Carousel start -->
+			<!-- End of carousel -->
+		</div>
+	</div>
+</div>
+{% endfor %}
+
+{% endblock %}
