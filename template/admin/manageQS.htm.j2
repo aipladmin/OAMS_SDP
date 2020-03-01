@@ -1,13 +1,45 @@
 {% extends "index.html" %}
 {% block content %}
+{{ data }}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
-  <h1 class="h2">
-  	<center>
-  		Manage Qualification and Specialization 
-  	</center>
-  </h1>
-  <div class="btn-toolbar mb-2 mb-md-0">
-  </div>
+	<h1 class="h2">
+		<center>
+			Manage Qualification and Specialization 
+		</center>
+	</h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
 
+</div>
+<div class="container">
+	<form>
+		<div class="row">
+			<div class="col">
+				<label>Select Profession</label>
+			</div>
+			<div class="col">
+				<label>Select Type</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<select class="custom-select" name="profession">
+					<option selected>-- SELECT --</option>
+					<option value="1">{{ data[0] }}</option>
+					<option value="2">{{ data[1] }}</option>
+					
+				</select>
+			</div>
+			<div class="col">
+				<select class="custom-select" name="type">
+					<option selected>-- SELECT --</option>
+					<option value="specialization">Specialization</option>
+					<option value="qualification">Qualification</option>
+					
+				</select>
+			</div>
+		</div>
+	</form>	
 </div>
 {% endblock %}

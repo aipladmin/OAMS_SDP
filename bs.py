@@ -791,7 +791,11 @@ def manage_professionscr():
 
 @app.route('/manageQS/')
 def manageQS():
-	return render_template("admin/manageQS.htm.j2")
+	cursor = connection.cursor()
+	sql = "Select profession_type from profession_type"
+	cursor.execute(sql)
+	data  = cursor.fetchall()
+	return render_template("admin/manageQS.htm.j2",data = data)
 
 
 @app.route('/reports/')
