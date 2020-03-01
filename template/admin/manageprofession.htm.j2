@@ -1,8 +1,12 @@
 {% extends "index.html" %}
 {% block content %}
-{{data }}
+{# {{data }} #}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
-	<h1 class="h2"><center>Summary Reports  </center></h1>
+	<h1 class="h2">
+		<center>
+			Profession
+		</center>
+	</h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 	</div>
 </div>
@@ -10,12 +14,12 @@
 	<form method="post" action="{{ url_for('manage_professionscr') }}">
 		<div class="form-group">
 			<label for="Enter Profession">Enter Profession</label>
-			<input type="text" class="form-control" id="Enter Profession" placeholder="Enter Profession">
+			<input type="text" class="form-control" id="Enter Profession" name="insert_profession">
 		</div>
 		<button type="submit" name="bttn" value="insert" class="btn btn-primary">Submit</button>
 	</form>
 </div>	
-
+<br/></br>
 <div class="container">
 	
 	<table class="table table-striped">
@@ -31,16 +35,17 @@
 			<form method="post" action="{{ url_for('manage_professionscr') }}">
 				{% for items in data %}
 				<tr>
-					<td>{{ items['Profession_Type_ID'] }}</td>
+					<td>
+						<input type="text" class="form-control-plaintext" name="Profession_Type_ID" value="{{ items['Profession_Type_ID'] }}" readonly /></td>
 					<td>
 						<input type="text" class="form-control" name="Profession_Type" value="{{items['Profession_Type'] }}" />
 						
 					</td>
 					<td>
-						<button type="submit" name="bttn" value="update" class="btn btn-primary">Update</button>
+						<button type="submit" name="bttn" value="{{items['Profession_Type_ID'] ~ items['Profession_Type'] }}" class="btn btn-primary">Update</button>
 					</td>
 					<td>
-						<button type="submit" name="bttn" update="delete" class="btn btn-danger">Delete</button>
+						<button type="submit" name="bttn" value="delete" class="btn btn-danger">Delete</button>
 					</td>
 				</tr>
 				{% endfor %}
