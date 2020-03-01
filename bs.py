@@ -789,9 +789,9 @@ def manage_professionscr():
 	cursor.close()	
 	return redirect(url_for('manage_profession'))
 
-@app.route('/manageQS/')
-def manageQS():
-	return render_template("admin/manageQS.htm.j2")
+# @app.route('/manageQS/')
+# def manageQS():
+# 	return render_template("admin/manageQS.htm.j2")
 
 
 @app.route('/reports/')
