@@ -770,31 +770,41 @@ def manage_profession():
 
 @app.route('/manage_profession/manage_professionscr/',methods=['POST'])
 def manage_professionscr():
+	profession_type = request.form['Profession_Type']
+	print(profession_type)
 	cursor = connection.cursor()
 	if request.form['bttn'] == "insert":
 		sql = "INSERT INTO `profession_type`(`Profession_Type`) VALUES (%s)"
 		sqldt = (request.form['insert_profession'])
-		
-	if request.form['bttn'] is not "":
+		cursor.execute(sql,sqldt)	
+	
+	if request.form['bttn'] == "update":
 		sql = "UPDATE `profession_type` SET `Profession_Type`= %s WHERE `Profession_Type_ID` =(%s)"
-		sqldt = (request.form['Profession_Type'],request.form['bttn'])
+		sqldt = (request.form['Profession_Type'],request.form['Profession_Type_ID'])
 		print(request.form['Profession_Type'])
 		print(request.form['bttn'])
 		print(cursor._executed)
 		cursor.execute(sql,sqldt)	
-		connection.commit()
+	
 	if request.form['bttn'] == "delete":
 		sql ="DELETE FROM `profession_type` WHERE `Profession_Type_ID` =(%s)"
 		sqldt = (request.form['Profession_Type_ID'])
+		cursor.execute(sql,sqldt)	
+	connection.commit()
 	cursor.close()	
 	return redirect(url_for('manage_profession'))
 
 @app.route('/manageQS/')
 def manageQS():
 	cursor = connection.cursor()
-	sql = "Select profession_type from profession_type"
+	sql = "Select profession_type_id,profession_type from profession_type"
 	cursor.execute(sql)
 	data  = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
 	return render_template("admin/manageQS.htm.j2",data = data)
 
 

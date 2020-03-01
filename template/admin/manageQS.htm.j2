@@ -26,9 +26,10 @@
 			<div class="col">
 				<select class="custom-select" name="profession">
 					<option selected>-- SELECT --</option>
-					<option value="1">{{ data[0] }}</option>
-					<option value="2">{{ data[1] }}</option>
+					{% for items in data %}
+					<option value="items['profession_type_id']">{{ items['profession_type'] }}</option>
 					
+					{% endfor %}
 				</select>
 			</div>
 			<div class="col">
@@ -38,6 +39,26 @@
 					<option value="qualification">Qualification</option>
 					
 				</select>
+			</div>
+		</div><br/>
+		{# <div class="row">
+			<div class="col">
+				<input type="text" class="form-control" placeholder="Enter">
+			</div>
+		</div> #}
+		<div class="row">
+			<div class="col">
+				<label>Enter Details </label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<input type="text" name="" class="form-control">
+			</div>
+		</div><br/>
+		<div class="row">
+			<div class="col">
+				<input class="btn btn-primary" type="submit" value="Submit">
 			</div>
 		</div>
 	</form>	
