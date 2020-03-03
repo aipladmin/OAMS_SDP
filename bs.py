@@ -622,9 +622,9 @@ def viewappointment():
 	print("MADHAV")
 	sql = "select consultant_master.CID from consultant_master inner join user_master ON consultant_master.uid = user_master.uid WHERE user_master.Email_ID = %s"
 	sqldt = (session['email'])
-	print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-	print(cursor._executed)
-	print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+	# print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+	# print(cursor._executed)
+	# print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 	cursor.execute(sql,sqldt)
 	data = cursor.fetchone()
 	print(data)
@@ -656,13 +656,16 @@ def viewappointment():
 
 @app.route('/viewappointment/viewappointmentscr',methods = ['post'])
 def viewappointmentscr():
-	bttn = request.form['bttn']
-	print(bttn)
 	cursor = connection.cursor()
-	
-	sql = "delete from appointment_master where AID = %s "
-	sqldt=(bttn)
-
+	if request.form['bttn'] is not "":
+		bttn = request.form['bttn']
+		print(bttn)
+		sql = "delete from appointment_master where AID = %s "
+		sqldt=(bttn)
+	if request.form['bttn'] == "feedback":
+		sql ="INSERT INTO `feedback_master`(`UID`, `Ratings`, `Comments`) VALUES (%s,%s,%s)"
+		sqldt = (request.form['UID'],request.form['ratings'],request.form['comments'])
+		print(cursor._executed)
 	cursor.execute(sql,sqldt)
 	# print(cursor._executed)
 	connection.commit()
@@ -698,6 +701,7 @@ def viewappointment_user():
 	data = cursor.fetchall()
 	print(len(data))
 	sql = ''' SELECT
+    user_master.UID,
     user_master.Name,
     user_master.Email_ID,
     CONCAT(
@@ -712,6 +716,7 @@ def viewappointment_user():
     consultant_master.City,
     consultant_master.State,
     consultant_master.Pincode,
+    appointment_master.AID,
     appointment_master.Date,
     appointment_master.Time,
     appointment_master.Status
@@ -720,7 +725,7 @@ FROM
  INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
  INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
  WHERE
-	appointment_master.CID = %s and appointment_master.UID = %s'''
+	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
 	sqldt = (data[0][0],data[0][1])
 	cursor.execute(sql,sqldt)
 	print(cursor._executed)
@@ -732,6 +737,7 @@ FROM
 	data = results
 	print(data)
 	return render_template('viewappointment_user.html',data = data)
+
 @app.route('/personal_details_userscr/')
 def personal_details_userscr():
 	cursor = connection.cursor()
@@ -797,7 +803,17 @@ def manage_professionscr():
 @app.route('/manageQS/')
 def manageQS():
 	cursor = connection.cursor()
-	sql = "Select profession_type_id,profession_type from profession_type"
+	
+	sqll = "SELECT profession_type.Profession_Type as Profession, profession_details.Type as Type, profession_details.Details as Details, profession_details.PDID as PDID FROM `profession_details` inner join profession_type on profession_details.Profession_Type_ID = profession_type.Profession_Type_ID"
+	cursor.execute(sqll)
+	sqlldata = cursor.fetchall()
+	columns_data = [column[0] for column in cursor.description]
+	resultss= []
+	for row in sqlldata:
+		resultss.append(dict(zip(columns_data,row)))
+	Sdata = resultss	
+
+	sql = "Select Profession_Type_ID,profession_type from profession_type"
 	cursor.execute(sql)
 	data  = cursor.fetchall()
 	columns = [column[0] for column in cursor.description]
@@ -805,8 +821,20 @@ def manageQS():
 	for row in data:
 		results.append(dict(zip(columns, row)))
 	data = results
-	return render_template("admin/manageQS.htm.j2",data = data)
+	return render_template("admin/manageQS.htm.j2",data = data,Sdata = Sdata)
 
+@app.route('/manageQSscr/',methods=['POST'])
+def manageQSscr():
+	cursor = connection.cursor()
+	if request.form['bttn'] == "insert":
+		sql = "INSERT INTO `profession_details`(`Profession_Type_ID`, `Type`, `Details`) VALUES (%s,%s,%s)"
+		sqldt = (request.form['profession'],request.form['type'],request.form['details'])
+	if request.form['bttn'] == "update":
+		sql = ""
+	cursor.execute(sql,sqldt)
+	connection.commit()
+	cursor.close()	
+	return 'INSERT'
 
 @app.route('/reports/')
 def reports():
@@ -826,11 +854,40 @@ def reports():
 	# print(data)
 	return render_template("reports.html",data=data)
 
+@app.route('/Profession_Reports/')
+def Profession_Reports():
+	cursor = connection.cursor()
+	sql = ''' /*Most booked consultant::*/
+SELECT
+    user_master.Name as "Full Name",
+    COUNT(appointment_master.UID) AS "No of Appointments",
+    profession_type.Profession_Type AS "Profession"
+FROM
+    appointment_master
+INNER JOIN consultant_master ON appointment_master.CID = consultant_master.CID
+INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+INNER JOIN user_master ON consultant_master.UID = user_master.UID
+INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
+WHERE
+    profession_type.Profession_Type LIKE "%doctors%"
+GROUP BY
+    consultant_master.CID'''
+	cursor.execute(sql)
+	data = cursor.fetchall()
+
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	reports.data = data
+	return render_template('admin/Profession_Reports.html',data = data)
+
 # @app.route('/dreports/')
 # def dreports():
 # 	return render_pdf(url_for('reports'))
 
-
+app.jinja_env.cache = {}
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',port='3030',debug = True)
 	
