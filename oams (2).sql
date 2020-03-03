@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 29, 2020 at 10:58 AM
+-- Generation Time: Mar 03, 2020 at 06:16 PM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -40,6 +40,15 @@ CREATE TABLE `appointment_master` (
   `Appoint_Booked` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `appointment_master`
+--
+
+INSERT INTO `appointment_master` (`AID`, `UID`, `CID`, `Date`, `Time`, `Files_1`, `Files_2`, `Status`, `Appoint_Booked`) VALUES
+(22, 74, 27, '2020-03-04', '13:00:00', NULL, NULL, 'approved', '2020-03-03 09:53:11'),
+(23, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'approved', '2020-03-03 10:14:42'),
+(24, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'approved', '2020-03-03 10:14:46');
+
 -- --------------------------------------------------------
 
 --
@@ -66,16 +75,38 @@ CREATE TABLE `consultant_master` (
 INSERT INTO `consultant_master` (`UID`, `CID`, `Add_Line1`, `Add_Line2`, `Add_Line3`, `Landmark`, `Area`, `City`, `State`, `Pincode`) VALUES
 (72, 25, 'G206 Surel Appartment', 'Nr Mocha Cafe', 'Opposite Hyderabadi biryani', 'B/h Starbucks Cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (112, 27, 'B-702 LWR Building,', 'Nr. mocha cafe', 'Opposite Hyderabadi biryani', 'B/h Starbucks Cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380056),
-(116, 30, 'B-702 LWR Building,', 'Nr. mocha cafe', 'Opposite Hyderabadi biryani', 'Nr starbucks cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
+(116, 30, 'B-702 LWR Building,', '', '', 'Nr starbucks cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (123, 33, 'D-702 The First', 'Nr Rajpath Club', 'B/h Asia Bariatricss', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (132, 39, 'The First', 'Nr Rajpath Club', 'B/h Asia Bariatricss', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (133, 40, 'Pegasus', 'ATVPP2430M', '12ATVPP2430M1JL', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
-(134, 41, 'H-25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
-(138, 42, 'H-25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda dairy', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
 (139, 43, 'H-25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda dairy', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
-(142, 44, 'H -25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda dairy', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
-(145, 45, 'H -25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda dairy', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
 (147, 46, 'TG-12', 'Jay niwas colony', 'Near gokul road', 'ravi petrol pump', 'Manik chowk', 'Mathura', 'Uttar Pradesh', 283009);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `demo view`
+-- (See below for the actual view)
+--
+CREATE TABLE `demo view` (
+`name` varchar(75)
+,`Email_ID` varchar(60)
+,`Phone_No` bigint(10)
+,`Experience` varchar(3)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback_master`
+--
+
+CREATE TABLE `feedback_master` (
+  `FID` int(10) NOT NULL,
+  `UID` int(10) NOT NULL,
+  `Ratings` int(1) NOT NULL,
+  `Comments` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -100,9 +131,20 @@ CREATE TABLE `monthlyscheduledetails` (
 CREATE TABLE `profession_details` (
   `PDID` int(10) NOT NULL,
   `Profession_Type_ID` int(10) NOT NULL,
-  `Details` varchar(50) NOT NULL,
-  `Type` varchar(50) NOT NULL
+  `Type` varchar(50) NOT NULL,
+  `Details` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `profession_details`
+--
+
+INSERT INTO `profession_details` (`PDID`, `Profession_Type_ID`, `Type`, `Details`) VALUES
+(1, 2, 'specialization', 'Cardiologist'),
+(2, 2, 'specialization', 'Hepatology'),
+(3, 2, 'specialization', 'Oncology'),
+(4, 1, 'specialization', 'Criminal'),
+(5, 1, 'specialization', 'Patent');
 
 -- --------------------------------------------------------
 
@@ -131,13 +173,12 @@ CREATE TABLE `profession_master` (
 
 INSERT INTO `profession_master` (`PID`, `CID`, `Profession_Type_ID`, `Specialization_1`, `Specialization_2`, `Specialization_3`, `Qualification_1`, `Qualification_2`, `Qualification_3`, `PAN_Card`, `GSTIN_No`, `Experience`) VALUES
 (6, 25, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Doctor of Medicine by research (MD(Res), DM)', 'Doctor of Philosophy (PhD, DPhil)', 'Master of Clinical Medicine (MCM)', 'ATVPP2460K', '24ATVPP2460KZL', '20+'),
-(7, 27, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Master of Clinical Medicine (MCM)', 'Master of Medical Science (MMSc, MMedSc)', 'Master of Medicine (MM, MMed)', '', '', NULL),
-(10, 30, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh', 'Doctor of Medicine (MD, Dr.MuD, Dr.Med)', 'Doctor of Osteopathic Medicine (DO)', '', '', NULL),
-(12, 33, 1, 'Patent', 'Information technology', 'Family', 'LLB', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', '', '', NULL),
-(18, 39, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430I', '14ATVPC1240L1Z7', NULL),
+(7, 27, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Master of Clinical Medicine (MCM)', 'Master of Medical Science (MMSc, MMedSc)', 'Master of Medicine (MM, MMed)', '', '', '10'),
+(10, 30, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh', 'Doctor of Medicine (MD, Dr.MuD, Dr.Med)', 'Doctor of Osteopathic Medicine (DO)', '', '', '12'),
+(12, 33, 1, 'Patent', 'Information technology', 'Family', 'LLB', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', '', '', '8'),
+(18, 39, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430I', '14ATVPC1240L1Z7', '5'),
 (19, 40, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430M', '12ATVPP2430M1JL', '11'),
-(20, 45, 1, 'Criminal', 'Patent', 'Information technology', 'LLB', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'EVPO1234RL', '12ATVPP5342M1JL', NULL),
-(21, 46, 1, 'Criminal', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'EVPO4670P', '14HJVPC3421L1Z7', NULL);
+(21, 46, 1, 'Criminal', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'EVPO4670P', '14HJVPC3421L1Z7', '2');
 
 -- --------------------------------------------------------
 
@@ -266,12 +307,8 @@ INSERT INTO `user_master` (`UTMID`, `UID`, `Name`, `Email_ID`, `Phone_No`, `Gend
 (3, 123, 'Parth Shastri', 'parth.shastri@gmail.com', 9826562271, 'Male', '0000-00-00', '480726a300bf6732d9567447a0d32ebe', 'activated', '2020-02-16 14:10:18'),
 (3, 132, 'Ankit Patel', 'ankit.patel@gmail.com', 3843122210, '', '0000-00-00', 'e835d236581ec4d07f9b6d0ce4ca3046', 'activated', '2020-02-28 08:10:02'),
 (3, 133, 'Aniket Maheshwari', 'aniket.maheshwari@gmail.com', 3823122210, '', '0000-00-00', '9272a9c85565ae11227aec4688fa8a7b', 'activated', '2020-02-28 08:12:18'),
-(3, 134, 'Laxmi Pillai', 'laxmip@gmail.com', 8769657489, '', '0000-00-00', '4cde26cad0febdc1039ab33b095e27de', 'pending', '2020-02-28 09:43:53'),
-(3, 138, 'Laxmi Pillai', 'laxmipill@gmail.com', 8769600489, '', '0000-00-00', '3bad6af0fa4b8b330d162e19938ee981', 'pending', '2020-02-28 09:46:54'),
 (3, 139, 'Laxmi Pillai', 'laxmipillai@gmail.com', 9889321123, '', '0000-00-00', 'd8578edf8458ce06fbc5bb76a58c5ca4', 'pending', '2020-02-28 09:48:26'),
-(3, 142, 'Laxmi Pillai', 'laxmipillaai@gmail.com', 8912423122, '', '0000-00-00', 'd8578edf8458ce06fbc5bb76a58c5ca4', 'pending', '2020-02-28 09:53:10'),
-(3, 145, 'Laxmi Pillai', 'laxmipi@gmail.com', 8912423145, '', '0000-00-00', '4cde26cad0febdc1039ab33b095e27de', 'pending', '2020-02-28 09:55:49'),
-(3, 147, 'Rashmi Tiwari', 'ramakant4102@gmail.com', 9876456784, '', '0000-00-00', '3e34805fecfca76a9915c348fc3e4eb0', 'pending', '2020-02-28 10:01:24');
+(3, 147, 'Rashmi Tiwari', 'ramakant4102@gmail.com', 9876456784, '', '0000-00-00', '3e34805fecfca76a9915c348fc3e4eb0', 'activated', '2020-02-28 10:01:24');
 
 -- --------------------------------------------------------
 
@@ -312,6 +349,15 @@ CREATE TABLE `weeklyscheduledetails` (
   `OnSunday` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Structure for view `demo view`
+--
+DROP TABLE IF EXISTS `demo view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `demo view`  AS  select `user_master`.`Name` AS `name`,`user_master`.`Email_ID` AS `Email_ID`,`user_master`.`Phone_No` AS `Phone_No`,`profession_master`.`Experience` AS `Experience` from ((`user_master` join `consultant_master` on(`user_master`.`UID` = `consultant_master`.`UID`)) join `profession_master` on(`consultant_master`.`CID` = `profession_master`.`CID`)) where `consultant_master`.`State` like 'Gujarat' order by `profession_master`.`Experience` ;
+
 --
 -- Indexes for dumped tables
 --
@@ -330,6 +376,13 @@ ALTER TABLE `appointment_master`
 ALTER TABLE `consultant_master`
   ADD PRIMARY KEY (`CID`),
   ADD UNIQUE KEY `UID` (`UID`);
+
+--
+-- Indexes for table `feedback_master`
+--
+ALTER TABLE `feedback_master`
+  ADD PRIMARY KEY (`FID`),
+  ADD KEY `feedback` (`UID`);
 
 --
 -- Indexes for table `monthlyscheduledetails`
@@ -406,13 +459,19 @@ ALTER TABLE `weeklyscheduledetails`
 -- AUTO_INCREMENT for table `appointment_master`
 --
 ALTER TABLE `appointment_master`
-  MODIFY `AID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `AID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `consultant_master`
 --
 ALTER TABLE `consultant_master`
   MODIFY `CID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT for table `feedback_master`
+--
+ALTER TABLE `feedback_master`
+  MODIFY `FID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `monthlyscheduledetails`
@@ -424,7 +483,7 @@ ALTER TABLE `monthlyscheduledetails`
 -- AUTO_INCREMENT for table `profession_details`
 --
 ALTER TABLE `profession_details`
-  MODIFY `PDID` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `PDID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `profession_master`
@@ -436,7 +495,7 @@ ALTER TABLE `profession_master`
 -- AUTO_INCREMENT for table `profession_type`
 --
 ALTER TABLE `profession_type`
-  MODIFY `Profession_Type_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Profession_Type_ID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `schedule`
@@ -484,6 +543,12 @@ ALTER TABLE `appointment_master`
 --
 ALTER TABLE `consultant_master`
   ADD CONSTRAINT `uid_constraintss` FOREIGN KEY (`UID`) REFERENCES `user_master` (`UID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `feedback_master`
+--
+ALTER TABLE `feedback_master`
+  ADD CONSTRAINT `feedback` FOREIGN KEY (`UID`) REFERENCES `user_master` (`UID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `monthlyscheduledetails`
