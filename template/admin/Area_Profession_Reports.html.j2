@@ -1,0 +1,103 @@
+{# Area_Profession_Reports.html.j2 #}
+
+{% extends "index.html" %}
+{% block content %}
+<style>
+	.feather-24{
+		width: 24px;
+		height: 24px;
+	}
+	@media print {
+		@page
+		{
+			size: A4 portrait;
+		}
+		body * {
+			visibility: hidden;
+
+		}
+		.prnt * {
+			visibility: hidden;
+		}
+		#cntnr * {
+			visibility: visible;
+			position: relative;	
+		}
+	}
+</style>
+
+{# {% for item in data %}
+{{ item['Name'] }}
+{% endfor %} #}
+{# {{ area }}
+{{ city }}
+{{ state }}  #}
+{{ data }}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2"><center>Summary Reports  </center></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+<form action="{{ url_for('Area_Profession_Reportsscr') }}" method="POST">
+	<div class="form-row">
+		<div class="col">
+			<select class="custom-select" name="area">
+				<option value="" selected></option>
+				{% for items in area %}
+					<option value="{{ items['area'] }}">{{ items['area'] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="col">
+			<select class="custom-select" name="city"><
+				<option value="" selected></option>
+				{% for items in city %}
+					<option value="{{ items['city'] }}">{{ items['city'] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="col">
+			<select class="custom-select" name="state">
+				<option value=""></option>	
+				{% for items in state %}
+					<option value="{{ items['state'] }}">{{ items['state'] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="col">
+			<button type="submit" name="submit" class="btn btn-success">Submit</button>
+		</div>
+	</div>
+</form>
+<div class="container" id="cntnr">
+	
+	<h3 style="text-align: center;">Location Reports</h3>
+	<p>
+		
+	</p>
+	<button class="feather-24" data-feather="printer" onclick="window.print();return false;" value="print" id="prnt" style="float:right;">
+	</button>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th>Full Name</th>
+				<th>Email ID</th>
+				<th>Phone No</th>
+				<th>Gender</th>
+				<!-- <th>Profession</th> -->
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}				
+			<tr>
+				<td>{{ item['Name'] }}</td>
+				<td>{{ item['Email_ID'] }}</td>
+				<td>{{ item['Phone_No'] }}</td>
+				<td>{{ item['Gender'] }}</td>
+			</tr>
+			{% endfor %} 
+		</tbody>
+	</table>
+</div>	
+{% endblock %}

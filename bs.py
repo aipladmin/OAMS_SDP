@@ -868,7 +868,7 @@ INNER JOIN consultant_master ON appointment_master.CID = consultant_master.CID
 INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
 INNER JOIN user_master ON consultant_master.UID = user_master.UID
 INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
-GROUP BY
+	GROUP BY
     consultant_master.CID'''
 	cursor.execute(sql)
 	data = cursor.fetchall()
@@ -880,6 +880,67 @@ GROUP BY
 	data = results
 	reports.data = data
 	return render_template('admin/Profession_Reports.html',data = data)
+
+@app.route('/Area_Profession_Reports/')
+def Area_Profession_Reports():
+	cursor = connection.cursor()
+	sql = "SELECT DISTINCT(area) from consultant_master"
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	area = results	
+	Area_Profession_Reports.area = area
+
+	sql = "select DISTINCT(city) from consultant_master"
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	city = results
+	Area_Profession_Reports.city = city
+
+	sql = "select DISTINCT(state) from consultant_master"
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	state = results	
+	Area_Profession_Reports.state = state		
+	return render_template("admin/Area_Profession_Reports.html.j2",area=Area_Profession_Reports.area,city=Area_Profession_Reports.city,state=Area_Profession_Reports.state)
+
+@app.route('/Area_Profession_Reportsscr/',methods=['post'])
+def Area_Profession_Reportsscr():
+	cursor = connection.cursor()
+	sql ='''
+	-- Area Wise Consultant Records
+SELECT
+    user_master.Name,
+    user_master.Email_ID,
+    user_master.Phone_No,
+    user_master.Gender
+FROM
+    user_master
+INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
+INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+where consultant_master.Area like %s or consultant_master.City like %s OR consultant_master.State LIKE %s
+	'''
+	sqldt =(request.form['area'],request.form['city'],request.form['state'])
+	cursor.execute(sql,sqldt)
+	data = cursor.fetchall()
+	print(cursor._executed)
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	return render_template('admin/Area_Profession_Reports.html.j2',data=data,area=Area_Profession_Reports.area,city=Area_Profession_Reports.city,state=Area_Profession_Reports.state)
 
 # @app.route('/dreports/')
 # def dreports():
