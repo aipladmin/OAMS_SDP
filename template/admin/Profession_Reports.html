@@ -1,7 +1,30 @@
 # Profession_Reports.html
 {% extends "index.html" %}
 {% block content %}
+<style>
+.feather-24{
+    width: 24px;
+    height: 24px;
+}
+@media print {
+	@page
+	{
+		size: A4 portrait;
+	}
+  body * {
+    visibility: hidden;
 
+  }
+  .prnt * {
+  	visibility: hidden;
+  }
+  #cntnr * {
+  	visibility: visible;
+    position: relative;	
+  }
+  
+}
+</style>
 <!-- {% for item in data %}
 {{ item['Name'] }}
 {% endfor %}
@@ -13,11 +36,13 @@
 
 </div>
 
-<div class="container">
+<div class="container" id="cntnr">
 	<h3 style="text-align: center;">Summarised reports</h3>
 	<p>
 		
 	</p>
+	<button class="feather-24" data-feather="printer" onclick="window.print();return false;" value="print" id="prnt" style="float:right;">
+	</button>
 	<table class="table">
 		<thead class="thead-dark">
 			<tr>
@@ -46,4 +71,5 @@
 		
 	</p>
 </div> #}
+	
 {% endblock %}	

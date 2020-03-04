@@ -868,8 +868,6 @@ INNER JOIN consultant_master ON appointment_master.CID = consultant_master.CID
 INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
 INNER JOIN user_master ON consultant_master.UID = user_master.UID
 INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
-WHERE
-    profession_type.Profession_Type LIKE "%doctors%"
 GROUP BY
     consultant_master.CID'''
 	cursor.execute(sql)
