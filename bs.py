@@ -942,9 +942,68 @@ where consultant_master.Area like %s or consultant_master.City like %s OR consul
 	data = results
 	return render_template('admin/Area_Profession_Reports.html.j2',data=data,area=Area_Profession_Reports.area,city=Area_Profession_Reports.city,state=Area_Profession_Reports.state)
 
-# @app.route('/dreports/')
-# def dreports():
-# 	return render_pdf(url_for('reports'))
+@app.route('/Date_Profession_Reports/')
+def Date_Profession_Reports():
+	cursor = connection.cursor()
+	sql = "SELECT MIN(appointment_master.Date) as min,Max(appointment_master.Date) as max FROM appointment_master"
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	Date_Profession_Reports.data = data
+	return render_template('admin/Date_Profession_Reports.htm.j2',data=Date_Profession_Reports.data)
+
+
+@app.route('/Date_Profession_Reportsscr/',methods=['POST'])
+def Date_Profession_Reportsscr():
+	cursor = connection.cursor()
+	sql='''
+		SELECT
+    user_master.Name,
+    COUNT(appointment_master.Time) as "Time",
+    profession_type.Profession_Type
+FROM
+    appointment_master
+INNER JOIN consultant_master ON appointment_master.CID = consultant_master.CID
+INNER JOIN user_master ON user_master.UID = consultant_master.UID
+INNER join profession_master on profession_master.CID = consultant_master.CID
+INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
+WHERE
+    appointment_master.Date BETWEEN %s AND %s
+    Group by appointment_master.CID
+	'''
+	sqldt = (request.form['min'],request.form['max'])
+	cursor.execute(sql,sqldt)
+	print(cursor._executed)
+	data = cursor.fetchall()
+	# columns = [column[0] for column in cursor.description]
+	# results = []
+	# for row in data:
+	# 	results.append(dict(zip(columns, row)))
+	# data = results
+	return render_template("admin/Date_Profession_Reports.htm.j2",report_data=data,data=Date_Profession_Reports.data)
+
+@app.route('/Experience_Profession_Reports/')
+def Experience_Profession_Reports():
+	cursor = connection.cursor()
+	sql='''SELECT
+    user_master.Name,
+    user_master.Email_ID,
+    profession_master.Experience,
+    profession_type.Profession_Type
+FROM
+    user_master
+INNER JOIN consultant_master ON user_master.UID = consultant_master.UID
+INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+INNER JOIN profession_type ON profession_type.Profession_Type_ID =  profession_master.Profession_Type_ID  
+ORDER BY profession_master.Experience+0  DESC'''
+	cursor.execute(sql)
+	data = cursor.fetchall()
+
+	return render_template("admin/Experience_Profession_Reports.htm.j2",data=data)
 
 app.jinja_env.cache = {}
 if __name__ == '__main__':
