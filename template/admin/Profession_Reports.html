@@ -2,35 +2,48 @@
 {% extends "index.html" %}
 {% block content %}
 <style>
-.feather-24{
-    width: 24px;
-    height: 24px;
-}
-@media print {
-	@page
-	{
-		size: A4 portrait;
+	.feather-24{
+		width: 24px;
+		height: 24px;
 	}
-  body * {
-    visibility: hidden;
+	@media print {
+		@page
+		{
+			size: A4 portrait;
+		}
+		body * {
+			visibility: hidden;
 
-  }
-  .prnt * {
-  	visibility: hidden;
-  }
-  #cntnr * {
-  	visibility: visible;
-    position: relative;	
-  }
-  
-}
+		}
+		hr * { visibility: visible;  }
+		#prnt * {
+			visibility: hidden;
+		}
+		#cntnr * {
+			visibility: visible;
+			position: relative;	
+		}
+		#ph * {
+			position: relative;	
+			visibility: visible;
+		}
+		footer *{
+			visibility: visible;
+		}
+	}
 </style>
-<header>
-<	
-<!-- {% for item in data %}
-{{ item['Name'] }}
-{% endfor %}
-{{ data }} -->
+<div class="container"  id ="ph" style="visibility: hidden;">
+	<img src="{{url_for('static',filename='logo.jpg') }}" alt="..." class="img-thumbnail"
+	style="width: 100px;height: 100px;">
+	<div class="page-header">
+		<center>
+			<h1>OAMS</h1>      
+		</center>
+	</div>
+	<div style="float: right;">
+		{{ now }}
+	</div>
+</div>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
 	<h1 class="h2"><center>Summary Reports  </center></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
@@ -40,6 +53,7 @@
 
 <div class="container" id="cntnr">
 	<h3 style="text-align: center;">Summarised reports</h3>
+	<hr style="visibility: hidden;">
 	<p>
 		
 	</p>
@@ -55,7 +69,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			 {% for item in data %}				
+			{% for item in data %}				
 			<tr>
 				<td>{{ item['Full Name'] }}</td>
 				<td>{{ item['No of Appointments'] }}</td>
@@ -64,14 +78,23 @@
 			</tr>
 			{% endfor %} 
 		</tbody>
+		<tfoot>
+			<th>Full Name</th>
+				<th>No of Appointments</th>
+				<th>Profession</th>
+		</tfoot>
 	</table>
 
 </div>
-{# <div class="container">
+<div class="container">
 	<p>
-		<a href="{{ url_for('dreports') }}" class="btn btn-info" role="button">Generate Report</a>
+		<a href="#" class="btn btn-info" role="button">Download Report</a>
 		
 	</p>
-</div> #}
-	
+</div>
+<footer style="visibility: hidden;">
+	<center>
+		<h3>End - of - Report</h3>
+	</center>
+</footer>
 {% endblock %}	

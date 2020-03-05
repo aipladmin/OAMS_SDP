@@ -1,4 +1,4 @@
-Experience_Reports.html
+{# Feedback_Wise.html #}
 {% extends "index.html" %}
 {% block content %}
 <style>
@@ -33,7 +33,6 @@ Experience_Reports.html
 	}
 </style>
 <div class="container"  id ="ph" style="visibility: hidden;">
-	
 	<img src="{{url_for('static',filename='logo.jpg') }}" alt="..." class="img-thumbnail"
 	style="width: 100px;height: 100px;">
 	<div class="page-header">
@@ -53,7 +52,7 @@ Experience_Reports.html
 </div>
 
 <div class="container" id="cntnr">
-	<h3 style="text-align: center;">Experience Wise Reports</h3>
+	<h3 style="text-align: center;">Feedback Wise Reports</h3>
 	<p>
 		
 	</p>
@@ -64,8 +63,8 @@ Experience_Reports.html
 		<thead class="thead-dark">
 			<tr>
 				<th>Full Name</th>
-				<th> Email ID</th>
-				<th>Experience</th>
+				<th>Ratings</th>
+				<th>No.of Reviews</th>
 				{# <th>Profession</th> #}
 				<!-- <th>Profession</th> -->
 			</tr>

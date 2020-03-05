@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
-{{ data }}
-{{ Sdata }}
+{# {{ data }}
+{{ Sdata }} #}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
 	<h1 class="h2">
 		<center>
@@ -89,12 +89,12 @@
 						{# <input type="text" class="form-control" name="Profession" value="{{items['Profession'] }}" /> #}
 						
 						<select class="custom-select">
-							{% if items['Profession'] == "Doctors" %}
+							{% if items['Profession'] == "Doctor" %}
 							<option selected value="items['Profession']">
 								{{ items['Profession'] }}
 							</option>
 							{% endif %}	
-							{% if items['Profession'] == "Lawyers" %}
+							{% if items['Profession'] == "Lawyer" %}
 							<option selected value="items['Profession']">
 								{{ items['Profession'] }}
 							</option>

@@ -2,6 +2,8 @@ from flask import *
 from flask_bootstrap import Bootstrap
 from flaskext.mysql import MySQL
 from flask import request
+from pdf417 import encode, render_image, render_svg
+# from flask_qr import QR
 # from fpdf import FPDF
 # from flask_weasyprint import HTML, render_pdf
 from flask_mail import Mail, Message
@@ -9,14 +11,16 @@ from random import *
 from datetime import *
 import time
 import os
-#import socket
 import string
 import requests
+from pdf417 import encode, render_image, render_svg
+from datetime import datetime
 
 app = Flask(__name__,template_folder ='template')
 mail = Mail(app)
 Bootstrap(app)
 app.secret_key = os.urandom(34)
+
 
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -224,6 +228,8 @@ def verify():
 						    user_master.Email_ID,
 						    user_master.Phone_No,
 						    user_master.Activation,
+						    profession_master.PAN_Card,
+						    profession_master.GSTIN_No,
 						    profession_type.Profession_Type
 							FROM
 						    user_master
@@ -619,7 +625,6 @@ def approveappointmentscr():
 @app.route('/viewappointment/')
 def viewappointment():
 	cursor = connection.cursor()
-	print("MADHAV")
 	sql = "select consultant_master.CID from consultant_master inner join user_master ON consultant_master.uid = user_master.uid WHERE user_master.Email_ID = %s"
 	sqldt = (session['email'])
 	# print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
@@ -651,7 +656,7 @@ def viewappointment():
 	for row in data:
 		results.append(dict(zip(columns, row)))
 	data = results
-	print(data)
+	
 	return render_template('viewappointment.html',data = data)
 
 @app.route('/viewappointment/viewappointmentscr',methods = ['post'])
@@ -879,7 +884,7 @@ INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_ma
 		results.append(dict(zip(columns, row)))
 	data = results
 	reports.data = data
-	return render_template('admin/Profession_Reports.html',data = data)
+	return render_template('admin/Profession_Reports.html',data = data,now = datetime.now())
 
 @app.route('/Area_Profession_Reports/')
 def Area_Profession_Reports():
@@ -940,7 +945,7 @@ where consultant_master.Area like %s or consultant_master.City like %s OR consul
 	for row in data:
 		results.append(dict(zip(columns, row)))
 	data = results
-	return render_template('admin/Area_Profession_Reports.html.j2',data=data,area=Area_Profession_Reports.area,city=Area_Profession_Reports.city,state=Area_Profession_Reports.state)
+	return render_template('admin/Area_Profession_Reports.html.j2',data=data,area=Area_Profession_Reports.area,city=Area_Profession_Reports.city,state=Area_Profession_Reports.state,now = datetime.now())
 
 @app.route('/Date_Profession_Reports/')
 def Date_Profession_Reports():
@@ -984,7 +989,7 @@ WHERE
 	# for row in data:
 	# 	results.append(dict(zip(columns, row)))
 	# data = results
-	return render_template("admin/Date_Profession_Reports.htm.j2",report_data=data,data=Date_Profession_Reports.data)
+	return render_template("admin/Date_Profession_Reports.htm.j2",report_data=data,data=Date_Profession_Reports.data,now = datetime.now())
 
 @app.route('/Experience_Profession_Reports/')
 def Experience_Profession_Reports():
@@ -1003,7 +1008,71 @@ ORDER BY profession_master.Experience+0  DESC'''
 	cursor.execute(sql)
 	data = cursor.fetchall()
 
-	return render_template("admin/Experience_Profession_Reports.htm.j2",data=data)
+	return render_template("admin/Experience_Profession_Reports.htm.j2",data=data,now = datetime.now())
+
+@app.route('/Feedback/')
+def Feedback():
+	cursor = connection.cursor()
+	sql = ''' 
+		SELECT
+    user_master.Name,
+    AVG(feedback_master.Ratings) AS "Ratings",
+    COUNT(feedback_master.Ratings) AS "No of Reviews"
+FROM
+    feedback_master
+INNER JOIN user_master ON feedback_master.UID = user_master.UID
+GROUP BY
+    user_master.Name
+	'''
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	return render_template('admin/Feedback_Wise.htm.j2',data=data,now = datetime.now())
+
+@app.route('/Area_Profession_Specialization_Reports/')
+def Area_Profession_Specialization_Reports():
+	cursor = connection.cursor()
+	sql = "SELECT DISTINCT(city) from consultant_master"
+	cursor.execute(sql)
+	area = cursor.fetchall()
+	Area_Profession_Specialization_Reports.area = area
+
+	sql = "select DISTINCT(Profession_Type) from profession_type"
+	cursor.execute(sql)
+	Area_Profession_Specialization_Reports.profession_type = cursor.fetchall()
+	
+	sql = "SELECT `Details` FROM profession_details WHERE `Type` LIKE '%specialization%' "
+	cursor.execute(sql)
+	Area_Profession_Specialization_Reports.specialization = cursor.fetchall()
+	return render_template("admin/Area_Profession_Specialization_Reports.htm.j2",area= Area_Profession_Specialization_Reports.area,profession_type = Area_Profession_Specialization_Reports.profession_type,specialization = Area_Profession_Specialization_Reports.specialization)
+
+@app.route('/Area_Profession_Specialization_Reportsscr/',methods=['POST'])
+def Area_Profession_Specialization_Reportsscr():
+	cursor = connection.cursor()
+	sql = '''
+	SELECT
+    user_master.Name,
+    user_master.Email_ID,
+    consultant_master.City,
+    profession_type.Profession_Type
+FROM
+    user_master
+INNER JOIN consultant_master ON user_master.UID = consultant_master.UID
+INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
+INNER JOIN profession_details ON profession_details.Profession_Type_ID = profession_master.Profession_Type_ID
+WHERE
+    profession_details.Details LIKE %s AND consultant_master.City LIKE %s AND profession_type.Profession_Type LIKE %s '''
+	sqldt = (request.form['specialization'],request.form['area'],request.form['profession_type'])
+	cursor.execute(sql,sqldt)
+	print(cursor._executed)
+	data = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	return render_template("admin/Area_Profession_Specialization_Reports.htm.j2",data=data,area= Area_Profession_Specialization_Reports.area,profession_type = Area_Profession_Specialization_Reports.profession_type,specialization = Area_Profession_Specialization_Reports.specialization,now = datetime.now())
+
 
 app.jinja_env.cache = {}
 if __name__ == '__main__':

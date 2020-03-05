@@ -16,23 +16,35 @@
 			visibility: hidden;
 
 		}
-		.prnt * {
+		hr * { visibility: visible;  }
+		#prnt * {
 			visibility: hidden;
 		}
 		#cntnr * {
 			visibility: visible;
 			position: relative;	
 		}
+		#ph * {
+			position: relative;	
+			visibility: visible;
+		}
+		footer *{
+			visibility: visible;
+		}
 	}
 </style>
-
-{# {% for item in data %}
-{{ item['Name'] }}
-{% endfor %} #}
-{# {{ area }}
-{{ city }}
-{{ state }}  #}
-{{ data }}
+<div class="container"  id ="ph" style="visibility: hidden;">
+	<img src="{{url_for('static',filename='logo.jpg') }}" alt="..." class="img-thumbnail"
+	style="width: 100px;height: 100px;">
+	<div class="page-header">
+		<center>
+			<h1>OAMS</h1>      
+		</center>
+	</div>
+	<div style="float: right;">
+		{{ now }}
+	</div>
+</div>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
 	<h1 class="h2"><center>Summary Reports  </center></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
@@ -45,7 +57,7 @@
 			<select class="custom-select" name="area">
 				<option value="" selected></option>
 				{% for items in area %}
-					<option value="{{ items['area'] }}">{{ items['area'] }}</option>
+				<option value="{{ items['area'] }}">{{ items['area'] }}</option>
 				{% endfor %}
 			</select>
 		</div>
@@ -53,7 +65,7 @@
 			<select class="custom-select" name="city"><
 				<option value="" selected></option>
 				{% for items in city %}
-					<option value="{{ items['city'] }}">{{ items['city'] }}</option>
+				<option value="{{ items['city'] }}">{{ items['city'] }}</option>
 				{% endfor %}
 			</select>
 		</div>
@@ -61,11 +73,11 @@
 			<select class="custom-select" name="state">
 				<option value=""></option>	
 				{% for items in state %}
-					<option value="{{ items['state'] }}">{{ items['state'] }}</option>
+				<option value="{{ items['state'] }}">{{ items['state'] }}</option>
 				{% endfor %}
 			</select>
 		</div>
-		<div class="col">
+		<div class="col-auto">
 			<button type="submit" name="submit" class="btn btn-success">Submit</button>
 		</div>
 	</div>
@@ -100,4 +112,15 @@
 		</tbody>
 	</table>
 </div>	
-{% endblock %}
+<div class="container">
+	<p>
+		<a href="#" class="btn btn-info" role="button">Download Report</a>
+		
+	</p>
+</div>
+<footer style="visibility: hidden;">
+	<center>
+		<h3>End - of - Report</h3>
+	</center>
+</footer>
+{% endblock %}	

@@ -15,59 +15,76 @@
 			visibility: hidden;
 
 		}
-		.prnt * {
+		hr * { visibility: visible;  }
+		#prnt * {
 			visibility: hidden;
 		}
 		#cntnr * {
 			visibility: visible;
 			position: relative;	
 		}
-
+		#ph * {
+			position: relative;	
+			visibility: visible;
+		}
+		footer *{
+			visibility: visible;
+		}
 	}
 </style>
-{{ report_data }}
-{# {{ data }} 
-{{ data[0]['min'].strftime('%d-%m-%Y') }} #}
+<div class="container"  id ="ph" style="visibility: hidden;">
+	<img src="{{url_for('static',filename='logo.jpg') }}" alt="..." class="img-thumbnail"
+	style="width: 100px;height: 100px;">
+	<div class="page-header">
+		<center>
+			<h1>OAMS</h1>      
+		</center>
+	</div>
+	<div style="float: right;">
+		{{ now }}
+	</div>
+</div>
+
+{# {{ data[0]['min'].strftime('%d-%m-%Y') }} #} 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
 	<h1 class="h2"><center>Summary Reports  </center></h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 	</div>
 
 </div>
-
+<form action="{{ url_for('Date_Profession_Reportsscr') }}" method="POST">
+	<div class="form-row">
+		<div class="col">
+			<input type="date" class="form-control" min="{{ data[0]['min']}}" max="{{ data[0]['max'] }}" name="min">
+		</div>
+		<div class="col">
+			<input type="date" class="form-control" min="{{ data[0]['min'] }}" max="{{ data[0]['max'] }}" name="max">
+		</div>
+		<div class="col-auto">
+			<button type="submit" name="submit" value="submit" class="btn btn-success">Search</button>
+		</div>
+	</div>
+</form>
 <div class="container" id="cntnr">
 	<h3 style="text-align: center;">Date Wise Reports</h3>
 	<p>
 		
 	</p>
-	<form action="{{ url_for('Date_Profession_Reportsscr') }}" method="POST">
-		<div class="form-row">
-			<div class="col">
-				<input type="date" class="form-control" min="{{ data[0]['min']}}" max="{{ data[0]['max'] }}" name="min">
-			</div>
-			<div class="col">
-				<input type="date" class="form-control" min="{{ data[0]['min'] }}" max="{{ data[0]['max'] }}" name="max">
-			</div>
-			<div class="col">
-				<button type="submit" name="submit" value="submit" class="btn btn-success">Search</button>
-			</div>
-		</div>
-	</form>
+	
 	<button class="feather-24" data-feather="printer" onclick="window.print();return false;" value="print" id="prnt" style="float:right;">
 	</button>
 	<table class="table">
 		<thead class="thead-dark">
 			<tr>
 				<th>Full Name</th>
-				<th>Email</th>
 				<th>Profession</th>
-				<th>Experience</th>
+				<th>Appointment</th>
 				{# <th>Profession</th> #}
 				<!-- <th>Profession</th> -->
 			</tr>
 		</thead>
 		<tbody>
-			{% for item in data %}				
+			{% for item in report_data %}				
 			<tr>
 				<td>{{ item[0] }}</td>
 				<td>{{ item[2] }}</td>
@@ -78,7 +95,16 @@
 			{% endfor %} 
 		</tbody>
 	</table>
-
-	
+</div>	
+<div class="container">
+	<p>
+		<a href="#" class="btn btn-info" role="button">Download Report</a>
+		
+	</p>
 </div>
+<footer style="visibility: hidden;">
+	<center>
+		<h3>End - of - Report</h3>
+	</center>
+</footer>
 {% endblock %}	

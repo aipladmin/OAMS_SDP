@@ -22,7 +22,7 @@
 							Email ID: {{ item['Email_ID']}}
 						</p>
 						<p class="card-text">
-							Date: {{ item['Date'] }}
+							Date: {{ item['Date'].strftime("%d-%m-%Y") }}
 						</p>
 						<p class="card-text">
 							Time: {{ item['Time'] }}
