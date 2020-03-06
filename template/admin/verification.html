@@ -79,7 +79,7 @@ body {
 
 </style>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
-	<h1 class="h2">Verification Consultant </h1>
+	<h1 class="h2">Verify Consultant </h1>
 	<div class="btn-toolbar mb-2 mb-md-0">
 	</div>
 
@@ -97,49 +97,49 @@ body {
 				<th>Pan Card</th>
 				<th>GST No</th>
 				<th>Verified</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for item in mngrdt %}
-				<tr>
-					<td>{{ item[0]	}}</td>
-					<td>{{ item[1]	}}</td>
-					<td>{{ item[2]	}}</td>
-					<!-- <td>{{ item[3]|capitalize	}}</td> -->
-					<td>{{ item[6]|capitalize	}}
-						
-						{% if item[3] == "activated" %}
-						<td><a class="btn btn-outline-success btn-sm" href='/verifyscr/{{ item[1],item[3] }}'>{{ item[3]|capitalize }}</a></td>	
-						{% endif %}
-						{% if item[3] == "pending" %}
-						<td><a class="btn btn-outline-danger btn-sm" href='/verifyscr/{{ item[1],item[3]|upper }}'>{{ item[3]|capitalize }}</a></td>	
-						{% endif %}
-						
-					</td>
-					<td>{{ item[4]	}}</td>
-					<td>{{ item[5]	}}</td>
-					<td><i class="fas fa-check-double"></i></td>
-				</tr>
-						
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in mngrdt %}
+      <tr>
+       <td>{{ item[0]	}}</td>
+       <td>{{ item[1]	}}</td>
+       <td>{{ item[2]	}}</td>
+       <!-- <td>{{ item[3]|capitalize	}}</td> -->
+       <td>{{ item[6]|capitalize	}}
 
-					{% endfor %}		
-				</tbody>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email ID</th>
-						<th>Phone</th>
-						<!-- <th>Activation</th> -->
-						<th>Profession</th>
-						<th>Change Status</th>
-						<th>View Details</th>	
-						<!-- <th>View User Ratings</th>
-						<th>View Complaints</th> -->
-						<th>Verified</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
+        {% if item[3] == "activated" %}
+        <td><a class="btn btn-outline-success btn-sm" href='/verifyscr/{{ item[1],item[3] }}'>{{ item[3]|capitalize }}</a></td>	
+        {% endif %}
+        {% if item[3] == "pending" %}
+        <td><a class="btn btn-outline-danger btn-sm" href='/verifyscr/{{ item[1],item[3]|upper }}'>{{ item[3]|capitalize }}</a></td>	
+        {% endif %}
+
+      </td>
+      <td>{{ item[4]	}}</td>
+      <td>{{ item[5]	}}</td>
+      <td><i class="fas fa-check-double"></i></td>
+    </tr>
 
 
-		{% endblock %}
+    {% endfor %}		
+  </tbody>
+  <thead>
+   <tr>
+    <th>Name</th>
+    <th>Email ID</th>
+    <th>Phone</th>
+    <!-- <th>Activation</th> -->
+    <th>Profession</th>
+    <th>Change Status</th>
+    <!-- <th>View Details</th>	 -->
+    <th>Pan Card</th>
+    <th>GST No</th>
+    <th>Verified</th>
+  </tr>
+</thead>
+</table>
+</div>
+
+
+{% endblock %}

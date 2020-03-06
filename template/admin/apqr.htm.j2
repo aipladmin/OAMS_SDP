@@ -1,0 +1,120 @@
+Experience_Reports.html
+{% extends "index.html" %}
+{% block content %}
+<style>
+	.feather-24{
+		width: 24px;
+		height: 24px;
+	}
+	@media print {
+		@page
+		{
+			size: A4 portrait;
+		}
+		body * {
+			visibility: hidden;
+
+		}
+		.prnt * {
+			visibility: hidden;
+		}
+		#cntnr * {
+			visibility: visible;
+			position: relative;	
+		}
+
+	}
+</style>
+{# {{ data }}
+{{ area }}
+{{ profession_type }} 
+{{ specialization }}
+ #}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
+	<h1 class="h2"><center>Summary Reports  </center></h1>
+	<div class="btn-toolbar mb-2 mb-md-0">
+	</div>
+
+</div>
+<form action="{{ url_for('apqrscr') }}" method="POST">
+		<div class="form-row">
+			<div class="col-4">
+				<label>Area</label>
+			</div>
+			<div class="col-4">
+				<label>Profession Type</label>
+			</div>
+			<div class="col-4">
+				<label>Specialization</label>
+			</div>
+		</div>
+		<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+		<div class="form-row">
+			<div class="col">
+				<select class="custom-select" name="area">
+					{% for item in area %}
+					<option value="{{ item[0] }}">{{ item[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col">
+				<select class="custom-select" name="profession_type">
+					{% for item in profession_type %}
+					<option value="{{ item[0] }}">{{ item[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col">
+				<select class="custom-select" name="specialization">
+					{% for item in specialization %}
+					<option value="{{ item[0] }}">{{ item[0] }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col-auto">
+				<button type="submit" name="submit" value="submit" class="btn btn-success">Search</button>
+			</div>
+		</div>
+	</form>
+<div class="container" id="cntnr">
+	<h3 style="text-align: center;">Area Profession Experience Wise Reports</h3>
+	<p>
+		
+	</p>
+	
+	<button class="feather-24" data-feather="printer" onclick="window.print();return false;" value="print" id="prnt" style="float:right;">
+	</button>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th>Full Name</th>
+				<th>Email ID</th>
+				<th>City</th>
+				<th>Experience</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in data %}				
+			<tr>
+				<td>{{ item[0] }}</td>
+				<td>{{ item[1] }}</td>
+				<td>{{ item[2] }}</td>
+				<td>{{ item[4] }}</td>
+				
+			</tr>
+			{% endfor %} 
+		</tbody>
+	</table>
+</div>	
+<div class="container">
+	<p>
+		<a href="#" class="btn btn-info" role="button">Download Report</a>
+		
+	</p>
+</div>
+<footer style="visibility: hidden;">
+	<center>
+		<h3>End - of - Report</h3>
+	</center>
+</footer>
+{% endblock %}	

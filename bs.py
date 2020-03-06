@@ -1073,6 +1073,35 @@ WHERE
 	data = results
 	return render_template("admin/Area_Profession_Specialization_Reports.htm.j2",data=data,area= Area_Profession_Specialization_Reports.area,profession_type = Area_Profession_Specialization_Reports.profession_type,specialization = Area_Profession_Specialization_Reports.specialization,now = datetime.now())
 
+@app.route('/Area_Profession_Qualification_Reports/')
+def Area_Profession_Qualification_Reports():
+	cursor = connection.cursor()
+	sql = "SELECT DISTINCT(city) from consultant_master"
+	cursor.execute(sql)
+	Area_Profession_Qualification_Reports.area = cursor.fetchall()
+	
+	sql = "select DISTINCT(Profession_Type) from profession_type"
+	cursor.execute(sql)
+	Area_Profession_Qualification_Reports.profession_type = cursor.fetchall()
+	
+	sql = "SELECT `Details` FROM profession_details WHERE `Type` LIKE '%specialization%' "
+	cursor.execute(sql)
+	Area_Profession_Qualification_Reports.specialization = cursor.fetchall()
+	return render_template("admin/apqr.htm.j2",area =Area_Profession_Qualification_Reports.area,profession_type=Area_Profession_Qualification_Reports.profession_type,specialization = Area_Profession_Qualification_Reports.specialization )
+
+@app.route('/apqrscr/',methods=['POST'])
+def apqrscr():
+	cursor = connection.cursor()
+	sql = "SELECT user_master.Name, user_master.Email_ID, consultant_master.City, profession_type.Profession_Type, profession_master.Experience FROM user_master INNER JOIN consultant_master ON user_master.UID = consultant_master.UID INNER JOIN profession_master ON profession_master.CID = consultant_master.CID INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID INNER JOIN profession_details ON profession_details.Profession_Type_ID = profession_master.Profession_Type_ID WHERE profession_details.Details LIKE %s AND consultant_master.City LIKE %s AND profession_type.Profession_Type LIKE %s ORDER BY `profession_master`.`Experience` DESC"
+	sqldt = (request.form['specialization'],request.form['area'],request.form['profession_type']) 
+	cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+	data = cursor.fetchall()
+	return render_template("admin/apqr.htm.j2",data=data,area =Area_Profession_Qualification_Reports.area,profession_type=Area_Profession_Qualification_Reports.profession_type,specialization = Area_Profession_Qualification_Reports.specialization )
+
+@app.route('/rcomplaint/')
+def rcomplaint():
+	return render_template("complaint_cons.html")
 
 app.jinja_env.cache = {}
 if __name__ == '__main__':
