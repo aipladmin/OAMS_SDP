@@ -53,7 +53,7 @@ def kill():
 
 
 
-@app.route('/')
+@app.route('/cregis/')
 def cregis():
 	return render_template('auth/consultant_registration.html')
 
@@ -281,6 +281,7 @@ def verifyscr(item):
  		cursor.close()
  		return redirect(url_for('verify'))
 	return "DONE"
+
 @app.route("/logout/")
 def logout():
 	#print("BEFORE"+session['email'])
@@ -294,7 +295,7 @@ def logout():
 def home():
 	return render_template('home.html')
 
-@app.route('/login/')
+@app.route('/')
 def login():
 	return render_template('auth/login.html')
 
