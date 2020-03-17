@@ -2,10 +2,6 @@ from flask import *
 from flask_bootstrap import Bootstrap
 from flaskext.mysql import MySQL
 from flask import request
-from pdf417 import encode, render_image, render_svg
-# from flask_qr import QR
-# from fpdf import FPDF
-# from flask_weasyprint import HTML, render_pdf
 from flask_mail import Mail, Message
 from random import *
 from datetime import *
@@ -13,7 +9,6 @@ import time
 import os
 import string
 import requests
-from pdf417 import encode, render_image, render_svg
 from datetime import datetime
 
 app = Flask(__name__,template_folder ='template')
@@ -1099,6 +1094,9 @@ def apqrscr():
 	# print(cursor._executed)
 	data = cursor.fetchall()
 	return render_template("admin/apqr.htm.j2",data=data,area =Area_Profession_Qualification_Reports.area,profession_type=Area_Profession_Qualification_Reports.profession_type,specialization = Area_Profession_Qualification_Reports.specialization )
+
+
+
 
 @app.route('/rcomplaint/')
 def rcomplaint():

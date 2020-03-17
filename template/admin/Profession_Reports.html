@@ -32,6 +32,11 @@
 		}
 	}
 </style>
+<script type="text/javascript">
+	$(document).ready(function() {
+    $('#example').DataTable();
+		} );
+</script>
 <div class="container"  id ="ph" style="visibility: hidden;">
 	<img src="{{url_for('static',filename='logo.jpg') }}" alt="..." class="img-thumbnail"
 	style="width: 100px;height: 100px;">
@@ -59,7 +64,7 @@
 	</p>
 	<button class="feather-24" data-feather="printer" onclick="window.print();return false;" value="print" id="prnt" style="float:right;">
 	</button>
-	<table class="table">
+	<table class="table" id="example">
 		<thead class="thead-dark">
 			<tr>
 				<th>Full Name</th>
@@ -92,6 +97,7 @@
 		
 	</p>
 </div>
+
 <footer style="visibility: hidden;">
 	<center>
 		<h3>End - of - Report</h3>
