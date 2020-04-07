@@ -387,6 +387,128 @@ WHERE
 	# checki = datetime.strftime(chck[3], '%d-%m-%Y' )
 	return render_template('schedule_cons.html',data = schedule.chck)
 
+#This is for the complaint and feedback
+
+@app.route("/index/complaint_user/")
+def complaint_user():
+    cursor = connection.cursor()
+    sql = ('''SELECT appointment_master.cid,user_master.UID
+	FROM
+	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
+	WHERE
+	user_master.Email_ID = %s ''')
+    sqldt =(session['email'])
+    cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+    data = cursor.fetchall()
+    sql = ''' SELECT
+    user_master.UID,
+    user_master.Name,
+    user_master.Email_ID,
+    CONCAT(
+        consultant_master.Add_Line1,
+        " , ",
+        consultant_master.Add_Line2,
+        " , ",
+        consultant_master.Add_Line3
+    ) AS Address,
+    user_master.Phone_No,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    appointment_master.AID,
+    appointment_master.Date,
+    appointment_master.Time,
+    appointment_master.Status
+    FROM
+    user_master
+    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
+    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
+    WHERE
+	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
+    sqldt = (data[0][0],data[0][1])
+    cursor.execute(sql,sqldt)
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in data:
+        results.append(dict(zip(columns, row)))
+    data = results
+    if request.method == "POST":
+        uid= request.form.get("UID")
+        issue=request.form.get("issue")
+        desc=request.form.get("description")
+        cur = connection.cursor()
+        cur.execute("INSERT INTO user_complaint(UID,Description)VALUES(%s,%s)",[uid,desc])
+        connection.commit()
+        cur.close()
+    return render_template('complaint_user.html',data=data)
+    
+@app.route("/index/Feedback_user/")
+def Feedback_user():
+    cursor = connection.cursor()
+    sql = ('''SELECT appointment_master.cid,user_master.UID
+	FROM
+	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
+	WHERE
+	user_master.Email_ID = %s ''')
+    sqldt =(session['email'])
+    cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+    data = cursor.fetchall()
+    sql = ''' SELECT
+    user_master.UID,
+    user_master.Name,
+    user_master.Email_ID,
+    CONCAT(
+        consultant_master.Add_Line1,
+        " , ",
+        consultant_master.Add_Line2,
+        " , ",
+        consultant_master.Add_Line3
+    ) AS Address,
+     user_master.Phone_No,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    appointment_master.AID,
+    appointment_master.Date,
+    appointment_master.Time,
+    appointment_master.Status
+    FROM
+     user_master
+    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
+    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
+    WHERE
+	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
+    sqldt = (data[0][0],data[0][1])
+    cursor.execute(sql,sqldt)
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in data:
+        results.append(dict(zip(columns, row)))
+    data = results
+    if request.method == "POST":
+        uid= request.form("UID")
+        email=request.form("emailid")
+        rating=request.form.get("Ratings")
+        desc=request.form.get("comments")
+        cur = connection.cursor()
+        cur.execute("INSERT INTO feedback_master(UID,Email,Ratings,Comments) VALUES (%s,%s,%s,%s)",[uid,email,rating,desc])
+        connection.commit()
+        cur.close()
+    return render_template('Feedback_user.html',data=data)
+    
+@app.route('/Feedback_userscr/')
+def Feedback_userscr():
+    return "Feedback_user"
+    
+#complaint and feedback end here
+
+
 @app.route('/schedule/schedulescr',methods=['POST'])
 def schedulescr():
 	print(session['email'])
