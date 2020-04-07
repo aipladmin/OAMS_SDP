@@ -1,0 +1,32 @@
+<!-- 404.html -->
+{% extends "index.html" %}
+{% block content %}
+<!-- <!DOCTYPE html>
+<html> -->
+<head>
+	<title>{% block title %} 404 {% endblock %}</title>
+</head>
+<body>
+	<center>		
+		<img src="{{ url_for('static',filename='android-chrome-512x512.png') }}" class="img-thumbnail" alt="OAMS Logo." width="200" height="200">
+	</center><br/>
+	<!-- <center> -->
+		<h1 style="text-align: center;">
+			404	
+		</h1>		
+	<br/>
+		<h4>
+			{{ error }}
+		</h4>
+	</center>
+	<br/>
+	<center>
+		<h6>
+			Bummer !!! <br/>
+			Knocked on the wrong door. Let us guide you to the Log in page Commrade. <br/>
+			<a href="{{ url_for('login') }}">Login</a>
+		</h6>
+	</center>
+<!-- </body>
+</html> -->
+{% endblock %}
