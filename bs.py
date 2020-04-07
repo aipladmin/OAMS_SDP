@@ -16,8 +16,6 @@ mail = Mail(app)
 Bootstrap(app)
 app.secret_key = os.urandom(34)
 
-
-
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'developer.websupp@gmail.com'
@@ -139,25 +137,34 @@ def cregisscr():
 	cursor.close()
 	return "DATA" + str(id)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('auth/404.html'), 404
+
 @app.route('/loginscr/', methods =['POST'])
 def loginscr():
-	email = request.form['email']	
-	password = request.form['password'] 
-	cursor = connection.cursor()
-	sql = "select user_type_master.user_type,user_master.Email_ID from user_master JOIN user_type_master on user_master.UTMID = user_type_master.UTMID WHERE Email_ID = %s and Password = md5(%s) and Activation = 'activated'"
-	sqldt = (email,password)
-	cursor.execute(sql,sqldt)
-	# print(cursor._executed)
-	connection.commit()
-	account = cursor.fetchone()
-	# print(account)
-	session['user_type'] = account[0]
-	session['email'] = account[1]
-
-	if not account:
-		return "UnSuccessfull"
-	else:
-		return render_template('index.html')
+	try:
+		email = request.form['email']	
+		password = request.form['password'] 
+		cursor = connection.cursor()
+		sql = "select user_type_master.user_type,user_master.Email_ID from user_master JOIN user_type_master on user_master.UTMID = user_type_master.UTMID WHERE Email_ID = %s and Password = md5(%s) and Activation = 'activated'"
+		sqldt = (email,password)
+		cursor.execute(sql,sqldt)
+		# 	print(cursor._executed)
+		connection.commit()
+		account = cursor.fetchone()
+		# print(account)
+		session['user_type'] = account[0]
+		session['email'] = account[1]
+	except TypeError as e:
+	    return render_template("auth/404.html", error ="Password khoto che.")
+	# else:
+	# 	if not account:
+	# 		return "UnSuccessfull"
+	# 	else:
+	# 		return render_template('index.html')
+	return render_template('index.html')		
 
 @app.route("/index/deletemanager/")
 def deletemanager():
@@ -298,14 +305,44 @@ def login():
 def details():
 	print(session['email'])
 	cursor =connection.cursor()
-	sql = ('''SELECT user_master.Email_ID,user_master.Name,user_master.Phone_No,consultant_master.Add_Line1,consultant_master.Add_Line2,consultant_master.Add_Line3,consultant_master.Landmark,consultant_master.Area,consultant_master.City,consultant_master.State,consultant_master.Pincode,profession_master.Specialization_1,profession_master.Specialization_2,profession_master.Specialization_3,profession_master.Qualification_1,profession_master.Qualification_2,profession_master.Qualification_3,profession_master.PAN_Card,profession_master.GSTIN_No,profession_master.Experience from user_master INNER join consultant_master on user_master.UID = consultant_master.UID inner join profession_master on profession_master.CID = consultant_master.CID where user_master.Email_ID =%s
+	sql = ('''SELECT
+    user_master.Email_ID,
+    user_master.Name,
+    user_master.Phone_No,
+    user_master.Gender,
+    user_master.DOB,
+    consultant_master.Add_Line1,
+    consultant_master.Add_Line2,
+    consultant_master.Add_Line3,
+    consultant_master.Landmark,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    profession_master.Specialization_1,
+    profession_master.Specialization_2,
+    profession_master.Specialization_3,
+    profession_master.Qualification_1,
+    profession_master.Qualification_2,
+    profession_master.Qualification_3,
+    profession_master.PAN_Card,
+    profession_master.GSTIN_No,
+    profession_master.Experience,
+    profession_type.Profession_Type
+FROM
+    user_master
+INNER JOIN consultant_master ON user_master.UID = consultant_master.UID
+INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+INNER JOIN profession_type ON profession_type.Profession_Type_ID = profession_master.Profession_Type_ID
+WHERE
+    user_master.Email_ID = %s
 		''')
 	q = (session['email'])
 	cursor.execute(sql,q)
-	
+	# print(cursor._executed)
 	columns = [col[0] for col in cursor.description]
 	rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-	print(rows,type(rows))
+	# print(rows,type(rows))
 	
 	details.Specialization_1 = rows[0]['Specialization_1']
 	details.Specialization_2 = rows[0]['Specialization_2']
@@ -658,7 +695,7 @@ def viewappointment():
 @app.route('/viewappointment/viewappointmentscr',methods = ['post'])
 def viewappointmentscr():
 	cursor = connection.cursor()
-	if request.form['bttn'] is not "":
+	if request.form['bttn'] == "":
 		bttn = request.form['bttn']
 		print(bttn)
 		sql = "delete from appointment_master where AID = %s "
@@ -1094,9 +1131,6 @@ def apqrscr():
 	# print(cursor._executed)
 	data = cursor.fetchall()
 	return render_template("admin/apqr.htm.j2",data=data,area =Area_Profession_Qualification_Reports.area,profession_type=Area_Profession_Qualification_Reports.profession_type,specialization = Area_Profession_Qualification_Reports.specialization )
-
-
-
 
 @app.route('/rcomplaint/')
 def rcomplaint():
