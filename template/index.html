@@ -1,67 +1,7 @@
-<Html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="Vini Paul">
-  <meta name="author" content="Bhupender Thakur">
-  <meta name="author" content="Madhav Parikh">
-
-  <!-- USER RATINGS CSS!!!!! -->  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!--Dashboard CSS-->
-  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-  <!-- jQuery library -->
-  <script src="{{ url_for('static', filename='jq.js') }}"></script>
-  <!-- Popper JS -->
-  <script src="{{ url_for('static', filename='ppr.js') }}"></script>
-  <!-- Latest compiled JavaScript -->
-  <script src="{{ url_for('static', filename='bts.js') }}"></script>
-  <!-- Multi DateTime Picker.CSS-->
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  
-  <script src="https://kit.fontawesome.com/1ab0ffdc89.js" crossorigin="anonymous"></script>
-
-  
-  
-  <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" 
-  href="{{ url_for('static',filename='favicon-32x32.png') }}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='favicon-16x16.png') }}">
-  <link rel="manifest" href="/site.webmanifest">
-
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-      }
-    }
-  </style>
-  
-</head>
+{% include 'header.htm.j2' %}
 <body>
   <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OAMS</a>
-    <!--<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
-    <!-- <ul class="navbar-nav px-3">
-      <li class="nav-item text-nowrap">
-        <a class="nav-link" href="{{ url_for('logout') }}">Sign out</a>
-      </li>
-    </ul> -->
     <ul class="navbar-nav px-3">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
@@ -69,28 +9,26 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
-          <!-- <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a> -->
-          </div>
-        </li>
-      </ul>
-    </nav>
-    {% if session['user_type']== "admin" or session['user_type']== "user" or session['user_type']== "consultant" or session['user_type']== "manager" %}
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active">
+        </div>
+      </li>
+    </ul>
+  </nav>
+  {% if session['user_type']== "admin" or session['user_type']== "user" or session['user_type']== "consultant" or session['user_type']== "manager" %}
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active">
 
-                  {{ session['user_type']|upper }}
+                {{ session['user_type']|upper }}
 
-                </a>
-              </li>
-              {% endif %}
-              <!-- ADMIN START -->            
-              {% if session['user_type']== "admin" %}
+              </a>
+            </li>
+            {% endif %}
+            <!-- ADMIN START -->            
+            {% if session['user_type']== "admin" %}
             <!-- <li class="nav-item">
               <a class="nav-link" href="{{ url_for('createmanager') }}">
                 <span data-feather="file"></span>
@@ -251,33 +189,5 @@
       </main>
     </div>
   </div>
+  {% include 'footer.htm.j2' %}
 
-
-    <!-- Bootstrap core JavaScript
-      ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->		
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>		
-      <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>		
-
-      <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js" ></script>
-      <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" ></script>
-      <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-      
-      <script type="text/javascript">
-        $(document).ready(function() {
-          $('#example').DataTable();
-        } );  
-      </script>
-      
-      
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js" ></script>  
-
-      <!-- Icons -->
-      <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-      <script>
-        feather.replace();
-      </script>
-
-      
-    </body>
-    </html>
