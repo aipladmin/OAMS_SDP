@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-<!-- {{ data }} -->
+<!-- {{ data[0]['Add_Line2'] }} -->
 <!--<form class="form-horizontal" method = "post" action = "{{ url_for('detailscr') }}">-->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3  border-bottom">
   <h1 class="h2"><center>Enter Personal Details</center></h1>
@@ -21,11 +21,11 @@
       </div>
       <div class="form-group col-md-4">
         <label for="DOB">DOB</label>
-        <input type="DOB" class="form-control" id="DOB" placeholder="DOB" name = "dob" value="12-12-1991">
+        <input type="date" class="form-control" id="DOB" placeholder="DOB" name = "dob" value="{{ data[0]['DOB'] }}">
       </div>
       <div class="form-group col-md-4">
         <label for="Gender">Gender</label>
-        <input type="Gender" class="form-control" id="Gender" placeholder="Gender" name = "Gender" value="Male">
+        <input type="Gender" class="form-control" id="Gender" placeholder="Gender" name = "Gender" value="{{ data[0]['Gender'] }}">
       </div>
 
       <div class="form-group col-md-4">
