@@ -44,50 +44,11 @@ def kill():
 	os.system('shutdown /p /f')
 	return "kill"
 
-
+# CONSULTANT USER REGISTRATION start
 
 @app.route('/cregis/')
 def cregis():
 	return render_template('auth/consultant_registration.html')
-
-
-@app.route('/registration/')
-def registration():
-	return render_template('auth/Registration.html')
-
-@app.route('/forgotpassword/')
-def forgotpassword():
-	return render_template('auth/forgot_password.html')
-
-
-@app.route('/registrationscr/', methods=['POST'])
-def registrationscr():
-	name = request.form['name']
-	mno = request.form['mno']
-	email = request.form['email'] 
-	password = request.form['password']
-	activated = "activated"
-	cursor = connection.cursor()
-	cursor.execute('Select UTMID from user_type_master where user_type = "user"')
-	account = cursor.fetchone()
-	UTMID = account[0]
-	insert_sql_query = """INSERT INTO `user_master`(`UTMID`,`Name`, `Email_ID`, `Phone_No`, `Password`, `Activation`) VALUES (%s,%s,%s,%s,md5(%s),%s)"""
-	recordTuple =(UTMID,name,email,mno,password,activated)
-	cursor = connection.cursor()
-	cursor.execute(insert_sql_query,recordTuple)
-	connection.commit()
-	cursor.close()
-	return render_template('success.html')
-
-@app.route('/personal_details_user/')
-def personal_details_user():
-	cursor = connection.cursor()
-	sql = ('Select Name,Email_ID,phone_no,Gender,DOB from user_master where Email_ID = %s')
-	sqldt = (session['email'])
-	cursor.execute(sql,sqldt)
-	# print(cursor._executed)
-	account = cursor.fetchone()
-	return render_template('personal_details_user.html',data=account)
 
 @app.route('/cregisscr/', methods = ['POST'])
 def cregisscr():
@@ -137,10 +98,57 @@ def cregisscr():
 	cursor.close()
 	return "DATA" + str(id)
 
+@app.route('/registration/')
+def registration():
+	return render_template('auth/Registration.html')
+
+@app.route('/registrationscr/', methods=['POST'])
+def registrationscr():
+	name = request.form['name']
+	mno = request.form['mno']
+	email = request.form['email'] 
+	password = request.form['password']
+	activated = "activated"
+	cursor = connection.cursor()
+	cursor.execute('Select UTMID from user_type_master where user_type = "user"')
+	account = cursor.fetchone()
+	UTMID = account[0]
+	insert_sql_query = """INSERT INTO `user_master`(`UTMID`,`Name`, `Email_ID`, `Phone_No`, `Password`, `Activation`) VALUES (%s,%s,%s,%s,md5(%s),%s)"""
+	recordTuple =(UTMID,name,email,mno,password,activated)
+	cursor = connection.cursor()
+	cursor.execute(insert_sql_query,recordTuple)
+	connection.commit()
+	cursor.close()
+	return render_template('success.html')
+
+@app.route('/forgotpassword/')
+def forgotpassword():
+	return render_template('auth/forgot_password.html')
+
+# CONSULTANT USER REGISTRATION start
+
+
+@app.route('/personal_details_user/')
+def personal_details_user():
+	cursor = connection.cursor()
+	sql = ('Select Name,Email_ID,phone_no,Gender,DOB from user_master where Email_ID = %s')
+	sqldt = (session['email'])
+	cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+	account = cursor.fetchone()
+	return render_template('personal_details_user.html',data=account)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('auth/404.html'), 404
+
+# LOGIN CODE
+# START
+@app.route('/')
+def login():
+	return render_template('auth/login.html')
 
 @app.route('/loginscr/', methods =['POST'])
 def loginscr():
@@ -159,17 +167,9 @@ def loginscr():
 		session['email'] = account[1]
 	except TypeError as e:
 	    return render_template("auth/404.html", error ="Password khoto che.")
-	# else:
-	# 	if not account:
-	# 		return "UnSuccessfull"
-	# 	else:
-	# 		return render_template('index.html')
 	return render_template('index.html')		
-
-@app.route("/index/deletemanager/")
-def deletemanager():
-	return render_template('deletemanager.html')
-
+# END
+# ADMIN CODING START
 @app.route("/index/createmanager/")
 def createmanager():
 	return render_template('createmanager.html')
@@ -199,7 +199,6 @@ def createmanagerscr():
 
 @app.route("/managepassword/")
 def managepassword():
-	print(session['email'])
 	return render_template('managepassword.html')
 
 @app.route("/managepasswordscr/",methods=['POST'])
@@ -217,10 +216,7 @@ def managepasswordscr():
 
 @app.route("/verify/")
 def verify():
-	print(session['email'])
-	print(session['user_type'])
 	if session['email'] is not None:
-		print("MADHAV")
 		if session['user_type'] == "admin":
 			cursor = connection.cursor()
 			data=""
@@ -284,6 +280,86 @@ def verifyscr(item):
  		return redirect(url_for('verify'))
 	return "DONE"
 
+@app.route('/manage_profession/')
+def manage_profession():
+	cursor = connection.cursor()
+	sql = "SELECT * FROM `profession_type` ORDER BY `profession_type`.`Profession_Type_ID` ASC"
+	cursor.execute(sql)
+	# print(cursor._executed)
+	data = cursor.fetchall()
+
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	
+	return render_template("admin/manageprofession.htm.j2",data = data)
+
+@app.route('/manage_profession/manage_professionscr/',methods=['POST'])
+def manage_professionscr():
+	profession_type = request.form['Profession_Type']
+	print(profession_type)
+	cursor = connection.cursor()
+	if request.form['bttn'] == "insert":
+		sql = "INSERT INTO `profession_type`(`Profession_Type`) VALUES (%s)"
+		sqldt = (request.form['insert_profession'])
+		cursor.execute(sql,sqldt)	
+	
+	if request.form['bttn'] == "update":
+		sql = "UPDATE `profession_type` SET `Profession_Type`= %s WHERE `Profession_Type_ID` =(%s)"
+		sqldt = (request.form['Profession_Type'],request.form['Profession_Type_ID'])
+		print(request.form['Profession_Type'])
+		print(request.form['bttn'])
+		print(cursor._executed)
+		cursor.execute(sql,sqldt)	
+	
+	if request.form['bttn'] == "delete":
+		sql ="DELETE FROM `profession_type` WHERE `Profession_Type_ID` =(%s)"
+		sqldt = (request.form['Profession_Type_ID'])
+		cursor.execute(sql,sqldt)	
+	connection.commit()
+	cursor.close()	
+	return redirect(url_for('manage_profession'))
+
+@app.route('/manageQS/')
+def manageQS():
+	cursor = connection.cursor()
+	
+	sqll = "SELECT profession_type.Profession_Type as Profession, profession_details.Type as Type, profession_details.Details as Details, profession_details.PDID as PDID FROM `profession_details` inner join profession_type on profession_details.Profession_Type_ID = profession_type.Profession_Type_ID"
+	cursor.execute(sqll)
+	sqlldata = cursor.fetchall()
+	columns_data = [column[0] for column in cursor.description]
+	resultss= []
+	for row in sqlldata:
+		resultss.append(dict(zip(columns_data,row)))
+	Sdata = resultss	
+
+	sql = "Select Profession_Type_ID,profession_type from profession_type"
+	cursor.execute(sql)
+	data  = cursor.fetchall()
+	columns = [column[0] for column in cursor.description]
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	data = results
+	return render_template("admin/manageQS.htm.j2",data = data,Sdata = Sdata)
+
+@app.route('/manageQSscr/',methods=['POST'])
+def manageQSscr():
+	cursor = connection.cursor()
+	if request.form['bttn'] == "insert":
+		sql = "INSERT INTO `profession_details`(`Profession_Type_ID`, `Type`, `Details`) VALUES (%s,%s,%s)"
+		sqldt = (request.form['profession'],request.form['type'],request.form['details'])
+	if request.form['bttn'] == "update":
+		sql = ""
+	cursor.execute(sql,sqldt)
+	connection.commit()
+	cursor.close()	
+	return 'INSERT'
+
+# ADMIN CODING END
+
 @app.route("/logout/")
 def logout():
 	#print("BEFORE"+session['email'])
@@ -293,14 +369,8 @@ def logout():
 	session.clear()
 	return redirect(url_for('login'))
 
-@app.route("/home/")
-def home():
-	return render_template('home.html')
 
-@app.route('/')
-def login():
-	return render_template('auth/login.html')
-
+# Consultant Coding start
 @app.route("/details/")
 def details():
 	print(session['email'])
@@ -424,128 +494,6 @@ WHERE
 	# checki = datetime.strftime(chck[3], '%d-%m-%Y' )
 	return render_template('schedule_cons.html',data = schedule.chck)
 
-#This is for the complaint and feedback
-
-@app.route("/index/complaint_user/")
-def complaint_user():
-    cursor = connection.cursor()
-    sql = ('''SELECT appointment_master.cid,user_master.UID
-	FROM
-	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
-	WHERE
-	user_master.Email_ID = %s ''')
-    sqldt =(session['email'])
-    cursor.execute(sql,sqldt)
-	# print(cursor._executed)
-    data = cursor.fetchall()
-    sql = ''' SELECT
-    user_master.UID,
-    user_master.Name,
-    user_master.Email_ID,
-    CONCAT(
-        consultant_master.Add_Line1,
-        " , ",
-        consultant_master.Add_Line2,
-        " , ",
-        consultant_master.Add_Line3
-    ) AS Address,
-    user_master.Phone_No,
-    consultant_master.Area,
-    consultant_master.City,
-    consultant_master.State,
-    consultant_master.Pincode,
-    appointment_master.AID,
-    appointment_master.Date,
-    appointment_master.Time,
-    appointment_master.Status
-    FROM
-    user_master
-    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
-    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
-    WHERE
-	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
-    sqldt = (data[0][0],data[0][1])
-    cursor.execute(sql,sqldt)
-    data = cursor.fetchall()
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in data:
-        results.append(dict(zip(columns, row)))
-    data = results
-    if request.method == "POST":
-        uid= request.form.get("UID")
-        issue=request.form.get("issue")
-        desc=request.form.get("description")
-        cur = connection.cursor()
-        cur.execute("INSERT INTO user_complaint(UID,Description)VALUES(%s,%s)",[uid,desc])
-        connection.commit()
-        cur.close()
-    return render_template('complaint_user.html',data=data)
-    
-@app.route("/index/Feedback_user/")
-def Feedback_user():
-    cursor = connection.cursor()
-    sql = ('''SELECT appointment_master.cid,user_master.UID
-	FROM
-	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
-	WHERE
-	user_master.Email_ID = %s ''')
-    sqldt =(session['email'])
-    cursor.execute(sql,sqldt)
-	# print(cursor._executed)
-    data = cursor.fetchall()
-    sql = ''' SELECT
-    user_master.UID,
-    user_master.Name,
-    user_master.Email_ID,
-    CONCAT(
-        consultant_master.Add_Line1,
-        " , ",
-        consultant_master.Add_Line2,
-        " , ",
-        consultant_master.Add_Line3
-    ) AS Address,
-     user_master.Phone_No,
-    consultant_master.Area,
-    consultant_master.City,
-    consultant_master.State,
-    consultant_master.Pincode,
-    appointment_master.AID,
-    appointment_master.Date,
-    appointment_master.Time,
-    appointment_master.Status
-    FROM
-     user_master
-    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
-    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
-    WHERE
-	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
-    sqldt = (data[0][0],data[0][1])
-    cursor.execute(sql,sqldt)
-    data = cursor.fetchall()
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in data:
-        results.append(dict(zip(columns, row)))
-    data = results
-    if request.method == "POST":
-        uid= request.form("UID")
-        email=request.form("emailid")
-        rating=request.form.get("Ratings")
-        desc=request.form.get("comments")
-        cur = connection.cursor()
-        cur.execute("INSERT INTO feedback_master(UID,Email,Ratings,Comments) VALUES (%s,%s,%s,%s)",[uid,email,rating,desc])
-        connection.commit()
-        cur.close()
-    return render_template('Feedback_user.html',data=data)
-    
-@app.route('/Feedback_userscr/')
-def Feedback_userscr():
-    return "Feedback_user"
-    
-#complaint and feedback end here
-
-
 @app.route('/schedule/schedulescr',methods=['POST'])
 def schedulescr():
 	print(session['email'])
@@ -592,124 +540,6 @@ def schedulescr():
 		cursor.execute(sql,sqldt)
 		connection.commit()
 		return "else"
-
-@app.route('/bookappointment/')
-def bookappointment():
-	cursor = connection.cursor()
-	sql = "SELECT `Profession_Type` FROM `profession_type` "
-	cursor.execute(sql)
-	acc = cursor.fetchall()
-	print("acc",acc[1])
-
-	pro = request.form.getlist('profession')
-	'''srch = request.form['search']
-	print(search)'''
-	sql = ('''SELECT
-    user_master.Name,
-    user_master.Email_ID,
-    user_master.Phone_No,
-    consultant_master.Add_Line1,
-    consultant_master.Add_Line2,
-    consultant_master.Add_Line3,
-    consultant_master.Landmark,
-    consultant_master.Area,
-    consultant_master.City,
-    consultant_master.State,
-    consultant_master.Pincode,
-    profession_master.Specialization_1,
-    profession_master.Specialization_2,
-    profession_master.Specialization_3,
-    profession_master.Qualification_1,
-    profession_master.Qualification_2,
-    profession_master.Qualification_3,
-    SCHEDULE.ID,
-    SCHEDULE.Start_Date,
-    SCHEDULE.End_Date,
-    SCHEDULE.Start_Time,
-    SCHEDULE.End_Time,
-    schedule_type_master.Type
-FROM
-    (
-        (
-            (
-                (
-                    user_master
-                INNER JOIN consultant_master ON user_master.UID = consultant_master.UID
-                )
-            INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
-            )
-        INNER JOIN SCHEDULE ON SCHEDULE
-        .CID = consultant_master.CID
-        )
-    INNER JOIN schedule_type_master ON schedule_type_master.STID = SCHEDULE.STID
-    ) ''')
-	cursor.execute(sql)
-	data = cursor.fetchall()
-	
-	columns = [column[0] for column in cursor.description]
-	print(columns)
-	results = []
-	for row in data:
-		results.append(dict(zip(columns, row)))
-	print("||||||||||||||||||||||||||||",results,"||||||||||||||||||||||||||||")	
-
-# 	sql = ''' select * from 
-# (select adddate(CURDATE()+1,t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) selected_date from
-#  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
-#  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
-#  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
-#  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,
-#  (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v
-# where selected_date between (select `Start_Date` from schedule where ID = %s) and (select `End_Date` from schedule where ID = %s)'''
-# 	a = tuple(x[17] for x in data)
-# 	dats=()
-# 	dts=()
-# 	for x in a:
-# 		sqldt = (x,x)
-# 		cursor.execute(sql,sqldt)
-# 		#print(cursor._executed)
-# 		dates = cursor.fetchall()
-# 		#print("+++++++++++++++++++=",dates,type(dates),"++++++++++++++++++++++++++")
-# 		x=(str(x))
-# 		dts =(x,dates)
-# 		#dats=(dats,dts)
-
-# 	print("!!!!!!!!!!",dts,type(dts),"!!!!!!!!!!!!!")
-		# SQL QUERY FOR DATES
-	return render_template('bookappointment.html',acc=acc,data=results)
-
-@app.route('/bookappointment/bookappointmentscr/',methods = ['POST'])
-def bookappointmentscr():
-	email = request.form['email']
-	start_date = request.form['start_date']
-	
-	end_time = request.form['end_time']
-	
-
-	cursor= connection.cursor()
-
-	sql = '''SELECT SCHEDULE.CID
-	FROM `schedule`
-	INNER JOIN consultant_master ON SCHEDULE.CID = consultant_master.CID
-	INNER JOIN user_master ON user_master.UID = consultant_master.UID
-	WHERE user_master.Email_ID =%s'''
-	sqldt = (email)
-	cursor.execute(sql,sqldt)
-	acc = cursor.fetchone()
-	
-
-	sql = "select user_master.UID from user_master where Email_ID = %s"
-	sqldt=(session['email'])
-	cursor.execute(sql,sqldt)
-	ac = cursor.fetchone()
-
-	sql = "INSERT INTO `appointment_master`(`UID`, `CID`, `Date`, `Time`) VALUES  (%s,%s,%s,%s)"
-	sqldt = (ac[0],acc[0],start_date,end_time)
-	cursor.execute(sql,sqldt)
-	connection.commit()
-	cursor.close()
-
-	return "bookappointmentscr"
 
 @app.route('/approveappointment/')
 def approveappointment():
@@ -830,8 +660,224 @@ def viewappointmentscr():
 	# print(cursor._executed)
 	connection.commit()
 	cursor.close()
+	return redirect(url_for('viewappointment'))		
 
-	return redirect(url_for('viewappointment'))
+#This is for the complaint and feedback
+
+@app.route("/index/complaint_user/")
+def complaint_user():
+    cursor = connection.cursor()
+    sql = ('''SELECT appointment_master.cid,user_master.UID
+	FROM
+	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
+	WHERE
+	user_master.Email_ID = %s ''')
+    sqldt =(session['email'])
+    cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+    data = cursor.fetchall()
+    sql = ''' SELECT
+    user_master.UID,
+    user_master.Name,
+    user_master.Email_ID,
+    CONCAT(
+        consultant_master.Add_Line1,
+        " , ",
+        consultant_master.Add_Line2,
+        " , ",
+        consultant_master.Add_Line3
+    ) AS Address,
+    user_master.Phone_No,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    appointment_master.AID,
+    appointment_master.Date,
+    appointment_master.Time,
+    appointment_master.Status
+    FROM
+    user_master
+    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
+    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
+    WHERE
+	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
+    sqldt = (data[0][0],data[0][1])
+    cursor.execute(sql,sqldt)
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in data:
+        results.append(dict(zip(columns, row)))
+    data = results
+    # if request.method == "POST":
+    #     uid= request.form.get("UID")
+    #     issue=request.form.get("issue")
+    #     desc=request.form.get("description")
+    #     cur = connection.cursor()
+    #     cur.execute("INSERT INTO user_complaint(UID,Description)VALUES(%s,%s)",[uid,desc])
+    #     connection.commit()
+    #     cur.close()
+    return render_template('complaint_user.html',data=data)
+    
+@app.route("/index/Feedback_user/")
+def Feedback_user():
+    cursor = connection.cursor()
+    sql = ('''SELECT appointment_master.cid,user_master.UID
+	FROM
+	appointment_master INNER join user_master ON user_master.UID = appointment_master.UID
+	WHERE
+	user_master.Email_ID = %s ''')
+    sqldt =(session['email'])
+    cursor.execute(sql,sqldt)
+	# print(cursor._executed)
+    data = cursor.fetchall()
+    sql = ''' SELECT
+    user_master.UID,
+    user_master.Name,
+    user_master.Email_ID,
+    CONCAT(
+        consultant_master.Add_Line1,
+        " , ",
+        consultant_master.Add_Line2,
+        " , ",
+        consultant_master.Add_Line3
+    ) AS Address,
+     user_master.Phone_No,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    appointment_master.AID,
+    appointment_master.Date,
+    appointment_master.Time,
+    appointment_master.Status
+    FROM
+     user_master
+    INNER JOIN consultant_master ON consultant_master.UID = user_master.UID
+    INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
+    WHERE
+	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
+    sqldt = (data[0][0],data[0][1])
+    cursor.execute(sql,sqldt)
+    data = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in data:
+        results.append(dict(zip(columns, row)))
+    data = results
+    if request.method == "POST":
+        uid= request.form("UID")
+        email=request.form("emailid")
+        rating=request.form.get("Ratings")
+        desc=request.form.get("comments")
+        cur = connection.cursor()
+        cur.execute("INSERT INTO feedback_master(UID,Email,Ratings,Comments) VALUES (%s,%s,%s,%s)",[uid,email,rating,desc])
+        connection.commit()
+        cur.close()
+    return render_template('Feedback_user.html',data=data)
+    
+@app.route('/Feedback_userscr/')
+def Feedback_userscr():
+    return "Feedback_user"
+    
+#complaint and feedback end here
+
+# USER START
+@app.route('/bookappointment/')
+def bookappointment():
+	cursor = connection.cursor()
+	sql = "SELECT `Profession_Type` FROM `profession_type` "
+	cursor.execute(sql)
+	acc = cursor.fetchall()
+	print("acc",acc[1])
+
+	pro = request.form.getlist('profession')
+	'''srch = request.form['search']
+	print(search)'''
+	sql = ('''SELECT
+    user_master.Name,
+    user_master.Email_ID,
+    user_master.Phone_No,
+    consultant_master.Add_Line1,
+    consultant_master.Add_Line2,
+    consultant_master.Add_Line3,
+    consultant_master.Landmark,
+    consultant_master.Area,
+    consultant_master.City,
+    consultant_master.State,
+    consultant_master.Pincode,
+    profession_master.Specialization_1,
+    profession_master.Specialization_2,
+    profession_master.Specialization_3,
+    profession_master.Qualification_1,
+    profession_master.Qualification_2,
+    profession_master.Qualification_3,
+    SCHEDULE.ID,
+    SCHEDULE.Start_Date,
+    SCHEDULE.End_Date,
+    SCHEDULE.Start_Time,
+    SCHEDULE.End_Time,
+    schedule_type_master.Type
+FROM
+    (
+        (
+            (
+                (
+                    user_master
+                INNER JOIN consultant_master ON user_master.UID = consultant_master.UID
+                )
+            INNER JOIN profession_master ON profession_master.CID = consultant_master.CID
+            )
+        INNER JOIN SCHEDULE ON SCHEDULE
+        .CID = consultant_master.CID
+        )
+    INNER JOIN schedule_type_master ON schedule_type_master.STID = SCHEDULE.STID
+    ) ''')
+	cursor.execute(sql)
+	data = cursor.fetchall()
+	
+	columns = [column[0] for column in cursor.description]
+	print(columns)
+	results = []
+	for row in data:
+		results.append(dict(zip(columns, row)))
+	return render_template('bookappointment.html',acc=acc,data=results)
+
+@app.route('/bookappointment/bookappointmentscr/',methods = ['POST'])
+def bookappointmentscr():
+	email = request.form['email']
+	start_date = request.form['start_date']
+	
+	end_time = request.form['end_time']
+	
+
+	cursor= connection.cursor()
+
+	sql = '''SELECT SCHEDULE.CID
+	FROM `schedule`
+	INNER JOIN consultant_master ON SCHEDULE.CID = consultant_master.CID
+	INNER JOIN user_master ON user_master.UID = consultant_master.UID
+	WHERE user_master.Email_ID =%s'''
+	sqldt = (email)
+	cursor.execute(sql,sqldt)
+	acc = cursor.fetchone()
+	
+
+	sql = "select user_master.UID from user_master where Email_ID = %s"
+	sqldt=(session['email'])
+	cursor.execute(sql,sqldt)
+	ac = cursor.fetchone()
+
+	sql = "INSERT INTO `appointment_master`(`UID`, `CID`, `Date`, `Time`) VALUES  (%s,%s,%s,%s)"
+	sqldt = (ac[0],acc[0],start_date,end_time)
+	cursor.execute(sql,sqldt)
+	connection.commit()
+	cursor.close()
+
+	return "bookappointmentscr"
+
+
 
 @app.route('/viewappointment/reschedule',methods = ['post'])
 def reschedule():
@@ -918,83 +964,7 @@ def personal_details_userscr():
 	connection.commit()
 	return "personal_details_userscr"
 
-@app.route('/manage_profession/')
-def manage_profession():
-	cursor = connection.cursor()
-	sql = "SELECT * FROM `profession_type` ORDER BY `profession_type`.`Profession_Type_ID` ASC"
-	cursor.execute(sql)
-	# print(cursor._executed)
-	data = cursor.fetchall()
-
-	columns = [column[0] for column in cursor.description]
-	results = []
-	for row in data:
-		results.append(dict(zip(columns, row)))
-	data = results
-	
-	return render_template("admin/manageprofession.htm.j2",data = data)
-
-@app.route('/manage_profession/manage_professionscr/',methods=['POST'])
-def manage_professionscr():
-	profession_type = request.form['Profession_Type']
-	print(profession_type)
-	cursor = connection.cursor()
-	if request.form['bttn'] == "insert":
-		sql = "INSERT INTO `profession_type`(`Profession_Type`) VALUES (%s)"
-		sqldt = (request.form['insert_profession'])
-		cursor.execute(sql,sqldt)	
-	
-	if request.form['bttn'] == "update":
-		sql = "UPDATE `profession_type` SET `Profession_Type`= %s WHERE `Profession_Type_ID` =(%s)"
-		sqldt = (request.form['Profession_Type'],request.form['Profession_Type_ID'])
-		print(request.form['Profession_Type'])
-		print(request.form['bttn'])
-		print(cursor._executed)
-		cursor.execute(sql,sqldt)	
-	
-	if request.form['bttn'] == "delete":
-		sql ="DELETE FROM `profession_type` WHERE `Profession_Type_ID` =(%s)"
-		sqldt = (request.form['Profession_Type_ID'])
-		cursor.execute(sql,sqldt)	
-	connection.commit()
-	cursor.close()	
-	return redirect(url_for('manage_profession'))
-
-@app.route('/manageQS/')
-def manageQS():
-	cursor = connection.cursor()
-	
-	sqll = "SELECT profession_type.Profession_Type as Profession, profession_details.Type as Type, profession_details.Details as Details, profession_details.PDID as PDID FROM `profession_details` inner join profession_type on profession_details.Profession_Type_ID = profession_type.Profession_Type_ID"
-	cursor.execute(sqll)
-	sqlldata = cursor.fetchall()
-	columns_data = [column[0] for column in cursor.description]
-	resultss= []
-	for row in sqlldata:
-		resultss.append(dict(zip(columns_data,row)))
-	Sdata = resultss	
-
-	sql = "Select Profession_Type_ID,profession_type from profession_type"
-	cursor.execute(sql)
-	data  = cursor.fetchall()
-	columns = [column[0] for column in cursor.description]
-	results = []
-	for row in data:
-		results.append(dict(zip(columns, row)))
-	data = results
-	return render_template("admin/manageQS.htm.j2",data = data,Sdata = Sdata)
-
-@app.route('/manageQSscr/',methods=['POST'])
-def manageQSscr():
-	cursor = connection.cursor()
-	if request.form['bttn'] == "insert":
-		sql = "INSERT INTO `profession_details`(`Profession_Type_ID`, `Type`, `Details`) VALUES (%s,%s,%s)"
-		sqldt = (request.form['profession'],request.form['type'],request.form['details'])
-	if request.form['bttn'] == "update":
-		sql = ""
-	cursor.execute(sql,sqldt)
-	connection.commit()
-	cursor.close()	
-	return 'INSERT'
+# USER END
 
 @app.route('/reports/')
 def reports():
