@@ -710,14 +710,6 @@ def complaint_user():
     for row in data:
         results.append(dict(zip(columns, row)))
     data = results
-    # if request.method == "POST":
-    #     uid= request.form.get("UID")
-    #     issue=request.form.get("issue")
-    #     desc=request.form.get("description")
-    #     cur = connection.cursor()
-    #     cur.execute("INSERT INTO user_complaint(UID,Description)VALUES(%s,%s)",[uid,desc])
-    #     connection.commit()
-    #     cur.close()
     return render_template('complaint_user.html',data=data)
     
 @app.route("/index/Feedback_user/")
