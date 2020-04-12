@@ -48,7 +48,11 @@ def kill():
 
 @app.route('/cregis/')
 def cregis():
-	return render_template('auth/consultant_registration.html')
+	cursor = connection.cursor()
+	cursor.execute("SELECT DISTINCT(profession_type.Profession_Type) FROM `profession_details` INNER JOIN profession_type ON profession_details.Profession_Type_ID = profession_type.Profession_Type_ID")
+	data = cursor.fetchall()
+	data = list(data)
+	return render_template('auth/consultant_registration.html',data=data)
 
 @app.route('/cregisscr/', methods = ['POST'])
 def cregisscr():
@@ -167,7 +171,7 @@ def loginscr():
 		session['email'] = account[1]
 	except TypeError as e:
 	    return render_template("auth/404.html", error ="Password khoto che.")
-	return render_template('index.html')		
+	return render_template('index.html',title = "Dashboard"+session['user_type'])		
 # END
 # ADMIN CODING START
 @app.route("/index/createmanager/")
@@ -294,7 +298,7 @@ def manage_profession():
 		results.append(dict(zip(columns, row)))
 	data = results
 	
-	return render_template("admin/manageprofession.htm.j2",data = data)
+	return render_template("admin/manageprofession.htm.j2",data = data,title = "Manage Profession" )
 
 @app.route('/manage_profession/manage_professionscr/',methods=['POST'])
 def manage_professionscr():
@@ -343,7 +347,7 @@ def manageQS():
 	for row in data:
 		results.append(dict(zip(columns, row)))
 	data = results
-	return render_template("admin/manageQS.htm.j2",data = data,Sdata = Sdata)
+	return render_template("admin/manageQS.htm.j2",data = data,Sdata = Sdata,title="Manage Qualification and Specialization")
 
 @app.route('/manageQSscr/',methods=['POST'])
 def manageQSscr():
