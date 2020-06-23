@@ -3,6 +3,7 @@ from flaskext.mysql import MySQL
 from flask_mail import Mail, Message
 from random import *
 from datetime import *
+from flask_htmlmin import HTMLMIN
 import time
 import os
 import string
@@ -10,8 +11,11 @@ import requests
 from datetime import datetime
 
 app = Flask(__name__,template_folder ='template')
+app.config['MINIFY_HTML'] = True
+
+
 mail = Mail(app)
-# Bootstrap(app)
+
 app.secret_key = os.urandom(34)
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
