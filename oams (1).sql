@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2020 at 06:39 AM
+-- Generation Time: Jun 23, 2020 at 04:58 PM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -45,16 +45,11 @@ CREATE TABLE `appointment_master` (
 --
 
 INSERT INTO `appointment_master` (`AID`, `UID`, `CID`, `Date`, `Time`, `Files_1`, `Files_2`, `Status`, `Appoint_Booked`) VALUES
-(22, 74, 27, '2020-03-04', '13:00:00', NULL, NULL, 'approved', '2020-03-03 09:53:11'),
-(23, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'approved', '2020-03-03 10:14:42'),
-(24, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'approved', '2020-03-03 10:14:46'),
-(25, 132, 33, '2020-03-05', '10:30:00', NULL, NULL, 'approved', '2020-03-04 05:07:06'),
-(26, 133, 46, '2020-03-18', '15:00:00', NULL, NULL, 'approved', '2020-03-04 05:08:32'),
-(27, 91, 40, '2020-03-24', '20:00:00', NULL, NULL, 'approved', '2020-03-04 05:09:10'),
-(28, 88, 39, '2020-03-17', '08:00:00', NULL, NULL, 'approved', '2020-03-04 05:11:07'),
-(29, 76, 43, '2020-03-26', '16:00:00', NULL, NULL, 'approved', '2020-03-04 05:11:52'),
-(30, 89, 27, '2020-04-08', '17:00:00', NULL, NULL, 'approved', '2020-03-04 05:12:24'),
-(31, 95, 25, '2020-04-08', '19:00:00', NULL, NULL, 'approved', '2020-03-04 05:13:14');
+(22, 74, 27, '2020-03-04', '13:00:00', NULL, NULL, 'completed', '2020-03-03 09:53:11'),
+(23, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'completed', '2020-03-03 10:14:42'),
+(24, 83, 27, '2020-03-04', '14:00:00', NULL, NULL, 'completed', '2020-03-03 10:14:46'),
+(25, 132, 33, '2020-03-05', '10:30:00', NULL, NULL, 'completed', '2020-03-04 05:07:06'),
+(33, 78, 30, '2020-06-26', '12:00:00', NULL, NULL, 'Approved', '2020-06-23 09:11:54');
 
 -- --------------------------------------------------------
 
@@ -82,12 +77,12 @@ CREATE TABLE `consultant_master` (
 INSERT INTO `consultant_master` (`UID`, `CID`, `Add_Line1`, `Add_Line2`, `Add_Line3`, `Landmark`, `Area`, `City`, `State`, `Pincode`) VALUES
 (72, 25, 'G206 Surel Appartment', 'Nr Mocha Cafe', 'Opposite Hyderabadi biryani', 'B/h Starbucks Cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (112, 27, 'B-702 LWR Building,', 'Nr. mocha cafe', 'Opposite Hyderabadi biryani', 'B/h Starbucks Cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380056),
-(116, 30, 'B-702 LWR Building,', '', '', 'Nr starbucks cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
+(116, 30, 'B-702 LWR Building,', 'Nr. mocha cafe', 'Opposite Hyderabadi biryani', 'Nr starbucks cafe', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (123, 33, 'D-702 The First', 'Nr Rajpath Club', 'B/h Asia Bariatricss', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (132, 39, 'The First', 'Nr Rajpath Club', 'B/h Asia Bariatricss', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (133, 40, 'Pegasus', 'ATVPP2430M', '12ATVPP2430M1JL', 'Punjab Honda', 'Bodakdev', 'Ahmedabad', 'Gujarat', 380054),
 (139, 43, 'H-25', 'Flower kunj society', 'Swastik char rasta', 'near Chamunda dairy', 'Navrangpura', 'Ahmedabad', 'Gujarat', 380009),
-(147, 46, 'TG-12', 'Jay niwas colony', 'Near gokul road', 'ravi petrol pump', 'Manik chowk', 'Mathura', 'Uttar Pradesh', 283009);
+(147, 46, 'TG-12', 'Jay niwas colony', 'Near gokul road', 'ravi petrol pump', 'Manek chowk', 'Mathura', 'Uttar Pradesh', 283009);
 
 -- --------------------------------------------------------
 
@@ -114,6 +109,18 @@ CREATE TABLE `feedback_master` (
   `Ratings` int(1) NOT NULL,
   `Comments` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `feedback_master`
+--
+
+INSERT INTO `feedback_master` (`FID`, `UID`, `Ratings`, `Comments`) VALUES
+(7, 112, 5, NULL),
+(8, 112, 4, NULL),
+(9, 112, 3, NULL),
+(10, 133, 5, NULL),
+(11, 133, 4, NULL),
+(12, 133, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -151,7 +158,24 @@ INSERT INTO `profession_details` (`PDID`, `Profession_Type_ID`, `Type`, `Details
 (2, 2, 'specialization', 'Hepatology'),
 (3, 2, 'specialization', 'Oncology'),
 (4, 1, 'specialization', 'Criminal'),
-(5, 1, 'specialization', 'Patent');
+(5, 1, 'specialization', 'Patent'),
+(6, 2, 'specialization', 'Neurologist'),
+(7, 2, 'specialization', 'Hemtalogy'),
+(8, 2, 'specialization', 'Infectious Disease'),
+(10, 2, 'qualification', 'Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh'),
+(11, 2, 'qualification', 'Doctor of Medicine (MD, Dr.MuD, Dr.Med)'),
+(12, 2, 'qualification', 'Doctor of Osteopathic Medicine (DO)'),
+(13, 2, 'qualification', 'Doctor of Medicine by research (MD(Res), DM)'),
+(14, 2, 'qualification', 'Doctor of Philosophy (PhD, DPhil)'),
+(15, 2, 'qualification', 'Master of Clinical Medicine (MCM)'),
+(16, 2, 'qualification', 'Master of Medical Science (MMSc, MMedSc)'),
+(17, 2, 'qualification', 'Master of Medicine (MM, MMed)'),
+(18, 1, 'qualification', 'LLB'),
+(19, 1, 'qualification', 'Master of Legal Studies (MLS)'),
+(20, 1, 'qualification', 'Master of Dispute Resolution (MDR)'),
+(21, 1, 'qualification', 'Juris Doctor (JD)'),
+(23, 1, 'specialization', 'Information technology'),
+(24, 1, 'specialization', 'Family');
 
 -- --------------------------------------------------------
 
@@ -179,13 +203,13 @@ CREATE TABLE `profession_master` (
 --
 
 INSERT INTO `profession_master` (`PID`, `CID`, `Profession_Type_ID`, `Specialization_1`, `Specialization_2`, `Specialization_3`, `Qualification_1`, `Qualification_2`, `Qualification_3`, `PAN_Card`, `GSTIN_No`, `Experience`) VALUES
-(6, 25, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Doctor of Medicine by research (MD(Res), DM)', 'Doctor of Philosophy (PhD, DPhil)', 'Master of Clinical Medicine (MCM)', 'ATVPP2460K', '24ATVPP2460KZL', '20+'),
-(7, 27, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Master of Clinical Medicine (MCM)', 'Master of Medical Science (MMSc, MMedSc)', 'Master of Medicine (MM, MMed)', '', '', '10'),
-(10, 30, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh', 'Doctor of Medicine (MD, Dr.MuD, Dr.Med)', 'Doctor of Osteopathic Medicine (DO)', '', '', '12'),
-(12, 33, 1, 'Patent', 'Information technology', 'Family', 'LLB', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', '', '', '8'),
+(6, 25, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Doctor of Medicine by research (MD(Res), DM)', 'Doctor of Philosophy (PhD, DPhil)', 'Master of Clinical Medicine (MCM)', 'ATVPP2460K', '06AADCB2230M1ZX', '20'),
+(7, 27, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Master of Clinical Medicine (MCM)', 'Master of Medical Science (MMSc, MMedSc)', 'Master of Medicine (MM, MMed)', 'ATVPP4545K', '24ATVPD12360KZL', '10'),
+(10, 30, 2, 'Hepatology', 'Infectious disease', 'Oncology', 'Bachelor of Medicine,Surgery(MBBS,BMBS,MBChB,MBBCh', 'Doctor of Medicine (MD, Dr.MuD, Dr.Med)', 'Doctor of Osteopathic Medicine (DO)', 'ATVPP9232K', '07AADCB2230M1ZV', '12'),
+(12, 33, 1, 'Patent', 'Information technology', 'Family', 'LLB', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'ATVPP9765K', '24AADCB2230M1Z2', '8'),
 (18, 39, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430I', '14ATVPC1240L1Z7', '5'),
-(19, 40, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430M', '12ATVPP2430M1JL', '11'),
-(21, 46, 1, 'Criminal', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'EVPO4670P', '14HJVPC3421L1Z7', '2');
+(19, 40, 1, 'Patent', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP2430M', '12ATVPP2430M1ZL', '11'),
+(21, 46, 1, 'Criminal', 'Information technology', 'Family', 'Master of Legal Studies (MLS)', 'Master of Dispute Resolution (MDR)', 'Juris Doctor (JD)', 'ATVPP9887M', '14HJVPC3421L1Z7', '2');
 
 -- --------------------------------------------------------
 
@@ -203,8 +227,8 @@ CREATE TABLE `profession_type` (
 --
 
 INSERT INTO `profession_type` (`Profession_Type_ID`, `Profession_Type`) VALUES
-(2, 'Doctors'),
-(1, 'Lawyers');
+(2, 'Doctor'),
+(1, 'Lawyer');
 
 -- --------------------------------------------------------
 
@@ -229,7 +253,7 @@ CREATE TABLE `schedule` (
 
 INSERT INTO `schedule` (`STID`, `CID`, `ID`, `Start_Date`, `End_Date`, `Start_Time`, `End_Time`, `Limit`) VALUES
 (1, 25, 6, '2019-11-02', '2020-12-30', '10:00:00', '19:00:00', 5),
-(1, 30, 7, '2020-02-25', '2020-05-25', '10:00:00', '17:00:00', 7);
+(1, 30, 7, '2020-02-25', '2020-12-30', '10:00:00', '17:00:00', 7);
 
 -- --------------------------------------------------------
 
@@ -275,7 +299,7 @@ CREATE TABLE `user_master` (
 --
 
 INSERT INTO `user_master` (`UTMID`, `UID`, `Name`, `Email_ID`, `Phone_No`, `Gender`, `DOB`, `Password`, `Activation`, `Activation_Log`) VALUES
-(1, 1, 'admin', 'admin@admin.com', 942600621, 'Male', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'activated', '2019-09-18 08:24:32'),
+(1, 1, 'admin', 'admin@admin.com', 9426006271, 'Male', '0000-00-00', '21232f297a57a5a743894a0e4a801fc3', 'activated', '2019-09-18 08:24:32'),
 (2, 29, 'ManagerMadhav', 'parkh.madhav1999@gmail.com', 9998256749, 'Male', '0000-00-00', 'ae3d664409ccc81ab6005b7073157f83', 'activated', '2019-10-12 09:52:06'),
 (3, 72, 'Divith Chajjed', 'divithchajjed@gmail.com', 9832675477, 'Male', '1991-02-07', '5c3bcb3064cceba94aa23fd88ee8bf5c', 'activated', '2019-10-28 04:04:19'),
 (4, 73, 'Vallabhbhai Patel', 'vallabhbhaipatel@gmail.com', 9284567853, 'Male', '0000-00-00', 'f1547379b09d8d6f40a6d88af1200f55', 'activated', '2019-10-31 13:10:58'),
@@ -309,13 +333,13 @@ INSERT INTO `user_master` (`UTMID`, `UID`, `Name`, `Email_ID`, `Phone_No`, `Gend
 (2, 103, 'DELL', 'nitanimesh@qwerty.com', 8433434323, 'Male', '0000-00-00', '15e5b123042f06d18c689080ce9a667d', 'activated', '2019-11-30 05:29:40'),
 (2, 105, 'DELLIO', 'imeshqwert@qwerty.com', 6578998742, 'Male', '0000-00-00', 'dce3fdec38db87dc7ffbf6807c583b20', 'activated', '2019-11-30 05:49:07'),
 (4, 108, 'Raunak Shah', 'raunak.shah@gmail.com', 7645343312, 'Male', '0000-00-00', '84ff6cdac52785fa23e5f51a1fc1022e', 'activated', '2020-01-06 08:13:18'),
-(3, 112, 'Sanieka Pate', 'sanieka.pate@gmail.com', 7645343399, 'Female', '1990-12-12', '16d6558ce817ead0096d678375ddfa3d', 'activated', '2020-01-17 05:00:07'),
+(3, 112, 'Sanieka Pate', 'sanieka.pate@gmail.com', 7645343399, 'Female', '1990-12-12', 'eaf45cb5d608971bfa11e335cddd1c1f', 'activated', '2020-01-17 05:00:07'),
 (3, 116, 'juhi chawla', 'juhi.chawla@gmail.com', 7645343393, 'Female', '1990-12-31', '4bffd0946157e2e1be5acffe6ffb9fbb', 'activated', '2020-01-19 09:09:15'),
 (3, 123, 'Parth Shastri', 'parth.shastri@gmail.com', 9826562271, 'Male', '0000-00-00', '480726a300bf6732d9567447a0d32ebe', 'activated', '2020-02-16 14:10:18'),
 (3, 132, 'Ankit Patel', 'ankit.patel@gmail.com', 3843122210, 'Male', '0000-00-00', 'e835d236581ec4d07f9b6d0ce4ca3046', 'activated', '2020-02-28 08:10:02'),
 (3, 133, 'Aniket Maheshwari', 'aniket.maheshwari@gmail.com', 3823122210, 'Male', '0000-00-00', '9272a9c85565ae11227aec4688fa8a7b', 'activated', '2020-02-28 08:12:18'),
 (3, 139, 'Laxmi Pillai', 'laxmipillai@gmail.com', 9889321123, 'Female', '0000-00-00', 'd8578edf8458ce06fbc5bb76a58c5ca4', 'pending', '2020-02-28 09:48:26'),
-(3, 147, 'Rashmi Tiwari', 'ramakant4102@gmail.com', 9876456784, 'Female', '0000-00-00', '3e34805fecfca76a9915c348fc3e4eb0', 'activated', '2020-02-28 10:01:24');
+(3, 147, 'Rashmi Tiwari', 'rashmi.tiwari@gmail.com', 9876456784, 'Female', '0000-00-00', 'fba3e8d25faf4ade93b34627cdc51a16', 'activated', '2020-02-28 10:01:24');
 
 -- --------------------------------------------------------
 
@@ -466,7 +490,7 @@ ALTER TABLE `weeklyscheduledetails`
 -- AUTO_INCREMENT for table `appointment_master`
 --
 ALTER TABLE `appointment_master`
-  MODIFY `AID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `AID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `consultant_master`
@@ -478,7 +502,7 @@ ALTER TABLE `consultant_master`
 -- AUTO_INCREMENT for table `feedback_master`
 --
 ALTER TABLE `feedback_master`
-  MODIFY `FID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `FID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `monthlyscheduledetails`
@@ -490,7 +514,7 @@ ALTER TABLE `monthlyscheduledetails`
 -- AUTO_INCREMENT for table `profession_details`
 --
 ALTER TABLE `profession_details`
-  MODIFY `PDID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PDID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `profession_master`

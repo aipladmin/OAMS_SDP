@@ -18,12 +18,12 @@
 			<div class="col-md-8" >
 				<form action="{{ url_for('complaint_user') }}" method = "post">
 					<div class="card-block " style="padding-left:12px;">
-						<h4 class="card-title">{{ item['Name'] }}</h4>
+						<h4 class="card-title">Dr. {{ item['Name']|capitalize }}</h4>
 						<p class="card-text">
 							Email ID: {{ item['Email_ID']}}
 						</p>
 						<p class="card-text">
-							Date: {{ item['Date'] }}
+							Date: {{ item['Date'].strftime('%d-%B-%Y') }}
 						</p>
 						<p class="card-text">
 							Time: {{ item['Time'] }}
@@ -36,7 +36,7 @@
 
 					<div class ="col-md-12 px-3 pb-3">
 
-						<button type="button" class="btn btn-danger" data-toggle="modal"  data-target="{{'#'~item['Email_ID']}}">Register Complaint</button>
+						<button type="button" class="btn btn-outline-danger" data-toggle="modal"  data-target="{{'#'~item['Email_ID']}}">Register Complaint</button>
 					</div>	
 				
 			<!-- COMPLAINT			 -->
