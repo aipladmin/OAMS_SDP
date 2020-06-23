@@ -1,7 +1,5 @@
 from flask import *
-from flask_bootstrap import Bootstrap
 from flaskext.mysql import MySQL
-from flask import request
 from flask_mail import Mail, Message
 from random import *
 from datetime import *
@@ -13,7 +11,7 @@ from datetime import datetime
 
 app = Flask(__name__,template_folder ='template')
 mail = Mail(app)
-Bootstrap(app)
+# Bootstrap(app)
 app.secret_key = os.urandom(34)
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -171,7 +169,7 @@ def loginscr():
 		session['email'] = account[1]
 	except TypeError as e:
 	    return render_template("auth/404.html", error ="Password khoto che.")
-	return render_template('index.html',title = "Dashboard"+session['user_type'])		
+	return render_template('index.html',title = "Dashboard: "+session['user_type'])		
 # END
 # ADMIN CODING START
 @app.route("/index/createmanager/")
@@ -263,7 +261,7 @@ def verifyuser():
 @app.route("/verifyscr/<string:item>", methods=['GET','POST'])
 def verifyscr(item):
 	item = eval(item)
-	if item[1] is "PENDING":
+	if item[1] == "PENDING":
 		print("INPENDING")
 		cursor = connection.cursor()
 		cursor.execute('UPDATE user_master SET Activation = "activated" WHERE Email_ID =%s',(item[0]))
@@ -273,7 +271,7 @@ def verifyscr(item):
 		connection.commit()
 		cursor.close()
 		return redirect(url_for('verify'))
-	elif item[1] is "activated":
+	elif item[1] == "activated":
  		cursor = connection.cursor()
  		cursor.execute('UPDATE user_master SET Activation = "pending" WHERE Email_ID =%s',(item[0]))
  		msg = Message('Activation',recipients = ['parikh.madhav1999@gmail.com'])
@@ -899,7 +897,7 @@ def viewappointment_user():
 		user_master.Email_ID = %s ''')
 	sqldt =(session['email'])
 	cursor.execute(sql,sqldt)
-	# print(cursor._executed)
+	print(cursor._executed)
 	data = cursor.fetchall()
 	print(len(data))
 	sql = ''' SELECT
@@ -928,9 +926,10 @@ FROM
  INNER JOIN appointment_master ON appointment_master.CID = consultant_master.CID
  WHERE
 	appointment_master.CID = %s and appointment_master.UID = %s and appointment_master.Status="approved"'''
+	print(cursor._executed)
 	sqldt = (data[0][0],data[0][1])
 	cursor.execute(sql,sqldt)
-	print(cursor._executed)
+	
 	data = cursor.fetchall()
 	columns = [column[0] for column in cursor.description]
 	results = []
