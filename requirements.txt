@@ -41,7 +41,7 @@ python-dateutil==2.8.0
 pywin32==224
 requests==2.22.0
 requests-oauthlib==1.2.0
-rsa==4.0
+rsa==4.1
 secure-smtplib==0.1.1
 selenium==3.141.0
 six==1.12.0
